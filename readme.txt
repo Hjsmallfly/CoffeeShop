@@ -1,6 +1,6 @@
-×¢ÒâÔÚjavaÃüÁîÖĞÖ¸¶¨-cp »òÕß-classpath Ê±ºò
-Èç 
-java -cp lib\beautyeye_lnf.jar exercise.MainFrame »áÌáÊ¾ÕÒ²»µ½Àà ÒòÎª´ËÊ±ÕÒÀàµÄÄ¿Â¼ÒÑ¾­±ä³ÉÁËlib
-ËùÒÔĞèÒªÔÚ-cpºóÃæÌí¼ÓÆäËûÂ·¾¶
+ï»¿æ³¨æ„åœ¨javaå‘½ä»¤ä¸­æŒ‡å®š-cp æˆ–è€…-classpath æ—¶å€™
+å¦‚ 
+java -cp lib\beautyeye_lnf.jar exercise.MainFrame ä¼šæç¤ºæ‰¾ä¸åˆ°ç±» å› ä¸ºæ­¤æ—¶æ‰¾ç±»çš„ç›®å½•å·²ç»å˜æˆäº†lib
+æ‰€ä»¥éœ€è¦åœ¨-cpåé¢æ·»åŠ å…¶ä»–è·¯å¾„
 java -cp lib\beautyeye_lnf.jar;. exercise.MainFrame
-			      //.±íÊ¾µ±Ç°Ä¿Â¼Ò²ÊÇ¿¼ÂÇ·¶Î§¡£
+			      //.è¡¨ç¤ºå½“å‰ç›®å½•ä¹Ÿæ˜¯è€ƒè™‘èŒƒå›´ã€‚
