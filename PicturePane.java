@@ -4,21 +4,20 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class PicturePane extends JPanel {
-	private Image src; //原图
+	private ArrayList<Image>  srcPICs = new ArrayList<Image>()  ; //保存原图片的List
 	private Image fitPic; //压缩之后的图片
 	public PicturePane() {
-		addMouseListener(new ChoosePic());//双击弹出文件选择窗口
+		//addMouseListener(new ChoosePic());//双击弹出文件选择窗口
 	}
 	
 	/**
@@ -27,10 +26,19 @@ public class PicturePane extends JPanel {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public void setPic(String filename) throws FileNotFoundException, IOException {
-		src = ImageIO.read(new FileInputStream(filename));
+	public void addPic(String filename) throws FileNotFoundException, IOException {
+		srcPICs.add( ImageIO.read(new FileInputStream(filename)) ); //添加图片
+	}
+	
+	/**
+	 * 
+	 * @param index 需要显示的图片的下标
+	 */
+	public void setPic(int index){
+		if (index < 0 || index >= srcPICs.size())
+			return;
 		double rate  = (double) PicturePane.this.getHeight() / PicturePane.this.getWidth();
-		fitPic = src.getScaledInstance(PicturePane.this.getWidth(), (int) (PicturePane.this.getWidth() * rate ), Image.SCALE_DEFAULT); //压缩图片
+		fitPic = srcPICs.get(index).getScaledInstance(PicturePane.this.getWidth(), (int) (PicturePane.this.getWidth() * rate ), Image.SCALE_DEFAULT); //压缩图片
 		PicturePane.this.repaint();//调用重绘方法
 	}
 	
@@ -52,7 +60,7 @@ public class PicturePane extends JPanel {
 				int val = fileChooser.showOpenDialog(PicturePane.this);
 				if (val == JFileChooser.APPROVE_OPTION){
 					try {
-						setPic(fileChooser.getSelectedFile().toString());
+						addPic(fileChooser.getSelectedFile().toString());
 					} catch (IOException e1) {
 						//图片打开错误
 					}  
