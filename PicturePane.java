@@ -22,19 +22,19 @@ public class PicturePane extends JPanel {
 	}
 	
 	/**
-	 * ��ͼƬ��ʾ��panel���棬�ߴ�ѹ��Ϊpanel�ĳߴ�
-	 * @param filename ͼƬ��·��
+	 * 设置panel显示的图片
+	 * @param filename 图片路径
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
 	public void setPic(String filename) throws FileNotFoundException, IOException {
 		src = ImageIO.read(new FileInputStream(filename));
-		double rate  = (double) PicturePane.this.getHeight() / PicturePane.this.getWidth(); // ����Ҳ��Ҫע�� ����ת�� ��Ȼ ����С�ڷ�ĸ��ʱ�� �ó��Ľ������ 0 
-		fitPic = src.getScaledInstance(PicturePane.this.getWidth(), (int) (PicturePane.this.getWidth() * rate ), Image.SCALE_DEFAULT);
-		PicturePane.this.repaint(); //ִ���ػ�
+		double rate  = (double) PicturePane.this.getHeight() / PicturePane.this.getWidth();
+		fitPic = src.getScaledInstance(PicturePane.this.getWidth(), (int) (PicturePane.this.getWidth() * rate ), Image.SCALE_DEFAULT); //压缩图片
+		PicturePane.this.repaint();//调用重绘方法
 	}
 	
-	@Override //��ͼ����
+	@Override //进行绘图ͼ����
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		if (fitPic != null){
