@@ -10,7 +10,7 @@ public class ShowFrame {
 				//f.setTitle(f.getClass().getName());
 				f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				f.setSize(width,height);
-				f.setLocationRelativeTo(null); //����
+				f.setLocationRelativeTo(null); //居中
 				f.setVisible(true);
 				
 			}

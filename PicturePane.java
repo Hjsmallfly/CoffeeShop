@@ -15,10 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class PicturePane extends JPanel {
-	private Image src; //ͼƬ
-	private Image fitPic; //ѹ���ߴ���ͼƬ
+	private Image src; //原图
+	private Image fitPic; //压缩之后的图片
 	public PicturePane() {
-		addMouseListener(new ChoosePic()); //˫��ѡ��ͼƬ
+		addMouseListener(new ChoosePic());//双击弹出文件选择窗口
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class PicturePane extends JPanel {
 		PicturePane.this.repaint();//调用重绘方法
 	}
 	
-	@Override //进行绘图ͼ����
+	@Override //进行绘图
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		if (fitPic != null){
@@ -47,14 +47,14 @@ public class PicturePane extends JPanel {
 	
 	public class ChoosePic extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) { 
-			if (e.getClickCount() == 2){ //˫��
+			if (e.getClickCount() == 2){ //双击
 				JFileChooser fileChooser = new JFileChooser();
 				int val = fileChooser.showOpenDialog(PicturePane.this);
 				if (val == JFileChooser.APPROVE_OPTION){
 					try {
 						setPic(fileChooser.getSelectedFile().toString());
 					} catch (IOException e1) {
-						//ͼƬ�򿪴���
+						//图片打开错误
 					}  
 				}
 					
