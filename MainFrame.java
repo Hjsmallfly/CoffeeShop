@@ -68,7 +68,7 @@ public class MainFrame extends JFrame {
 		
 		PicturePane showPIC = new PicturePane();
 		showPIC.setBounds(10, 36, 604, 218);
-		showPIC.addPic("E:\\JAVA\\WorkSpace\\ThinkingInJava\\src\\exercise\\src\\IMG_0734_.jpg");
+		showPIC.addPic(this.getClass().getResource("/data/recommendation.jpg").toString().substring(6));
 		showPIC.setPic(0);
 		contentPane.add(showPIC);
 		
