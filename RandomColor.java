@@ -7,4 +7,4 @@ public class RandomColor {
 	public static Color getColor(){
 		return new Color(rand.nextInt(128), rand.nextInt(128), rand.nextInt(128));
 	}
-}
+}  

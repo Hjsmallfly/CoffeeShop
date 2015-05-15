@@ -1,4 +1,4 @@
-package exercise;
+ï»¿package exercise;
 
 
 
@@ -36,11 +36,11 @@ public class MainFrame extends JFrame {
 	 */
 	public static void main(String[] args) {
 		try {
-			UIManager.put("RootPane.setupButtonVisible",false); //²»ÏÔÊ¾ÉèÖÃ°´Å¥
+			UIManager.put("RootPane.setupButtonVisible",false); //ä¸æ˜¾ç¤ºè®¾ç½®æŒ‰é’®
 			BeautyEyeLNFHelper.frameBorderStyle = FrameBorderStyle.translucencyAppleLike;
 			BeautyEyeLNFHelper.launchBeautyEyeLNF();
 			UIManager.put("TabbedPane.tabAreaInsets"
-				    , new javax.swing.plaf.InsetsUIResource(0, 0, 0, 0)); //tab µÄ×óËõ½ø
+				    , new javax.swing.plaf.InsetsUIResource(0, 0, 0, 0)); //tab çš„å·¦ç¼©è¿›
 		} catch (Exception e) {
 			//do nothing
 		}
@@ -121,7 +121,7 @@ public class MainFrame extends JFrame {
 		panel_3.add(list_1);
 		
 		JComboBox comboBox_1 = new JComboBox(strs);
-		comboBox_1.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 11));
+		comboBox_1.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 11));
 		comboBox_1.setEditable(true);
 		comboBox_1.setBounds(10, 10, 579, 21);
 		tab1.add(comboBox_1);
@@ -131,7 +131,7 @@ public class MainFrame extends JFrame {
 
 		
 		JLabel recommendation = new JLabel("Recommendation");
-		recommendation.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 11));
+		recommendation.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 11));
 		recommendation.setForeground(RandomColor.getColor());
 		recommendation.setBounds(10, 10, 160, 26);
 		contentPane.add(recommendation);

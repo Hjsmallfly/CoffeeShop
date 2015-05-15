@@ -1,5 +1,5 @@
 package exercise;
-
+  
 import javax.swing.*;
 public class ShowFrame {
 	public static void run(final JFrame f,final int width,final int height){
@@ -10,7 +10,7 @@ public class ShowFrame {
 				//f.setTitle(f.getClass().getName());
 				f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				f.setSize(width,height);
-				f.setLocationRelativeTo(null); //¾ÓÖÐ
+				f.setLocationRelativeTo(null); //ï¿½ï¿½ï¿½ï¿½
 				f.setVisible(true);
 				
 			}

@@ -16,25 +16,25 @@ import javax.swing.JPanel;
 
 public class PicturePane extends JPanel {
 	private Image src; //Í¼Æ¬
-	private Image fitPic; //Ñ¹Ëõ³ß´çºóµÄÍ¼Æ¬
+	private Image fitPic; //Ñ¹ï¿½ï¿½ï¿½ß´ï¿½ï¿½ï¿½Í¼Æ¬
 	public PicturePane() {
-		addMouseListener(new ChoosePic()); //Ë«»÷Ñ¡ÔñÍ¼Æ¬
+		addMouseListener(new ChoosePic()); //Ë«ï¿½ï¿½Ñ¡ï¿½ï¿½Í¼Æ¬
 	}
 	
 	/**
-	 * ½«Í¼Æ¬ÏÔÊ¾µ½panelÉÏÃæ£¬³ß´çÑ¹ËõÎªpanelµÄ³ß´ç
-	 * @param filename Í¼Æ¬µÄÂ·¾¶
+	 * ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Ê¾ï¿½ï¿½panelï¿½ï¿½ï¿½æ£¬ï¿½ß´ï¿½Ñ¹ï¿½ï¿½Îªpanelï¿½Ä³ß´ï¿½
+	 * @param filename Í¼Æ¬ï¿½ï¿½Â·ï¿½ï¿½
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
 	public void setPic(String filename) throws FileNotFoundException, IOException {
 		src = ImageIO.read(new FileInputStream(filename));
-		double rate  = (double) PicturePane.this.getHeight() / PicturePane.this.getWidth(); // ÕâÀïÒ²ÊÇÒª×¢Òâ ÀàÐÍ×ª»» ²»È» ·Ö×ÓÐ¡ÓÚ·ÖÄ¸µÄÊ±ºò µÃ³öµÄ½á¹û»áÊÇ 0 
+		double rate  = (double) PicturePane.this.getHeight() / PicturePane.this.getWidth(); // ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½Òª×¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ ï¿½ï¿½È» ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½Ú·ï¿½Ä¸ï¿½ï¿½Ê±ï¿½ï¿½ ï¿½Ã³ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0 
 		fitPic = src.getScaledInstance(PicturePane.this.getWidth(), (int) (PicturePane.this.getWidth() * rate ), Image.SCALE_DEFAULT);
-		PicturePane.this.repaint(); //Ö´ÐÐÖØ»æ
+		PicturePane.this.repaint(); //Ö´ï¿½ï¿½ï¿½Ø»ï¿½
 	}
 	
-	@Override //»æÍ¼²Ù×÷
+	@Override //ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		if (fitPic != null){
@@ -47,15 +47,15 @@ public class PicturePane extends JPanel {
 	
 	public class ChoosePic extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) { 
-			if (e.getClickCount() == 2){ //Ë«»÷
+			if (e.getClickCount() == 2){ //Ë«ï¿½ï¿½
 				JFileChooser fileChooser = new JFileChooser();
 				int val = fileChooser.showOpenDialog(PicturePane.this);
 				if (val == JFileChooser.APPROVE_OPTION){
 					try {
 						setPic(fileChooser.getSelectedFile().toString());
 					} catch (IOException e1) {
-						//Í¼Æ¬´ò¿ª´íÎó
-					}
+						//Í¼Æ¬ï¿½ò¿ª´ï¿½ï¿½ï¿½
+					}  
 				}
 					
 			}
