@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,19 @@ public class PicturePane extends JPanel {
 	private Image fitPic; //压缩尺寸后的图片
 	public PicturePane() {
 		addMouseListener(new ChoosePic()); //双击选择图片
+	}
+	
+	/**
+	 * 将图片显示到panel上面，尺寸压缩为panel的尺寸
+	 * @param filename 图片的路径
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public void setPic(String filename) throws FileNotFoundException, IOException {
+		src = ImageIO.read(new FileInputStream(filename));
+		double rate  = (double) PicturePane.this.getHeight() / PicturePane.this.getWidth(); // 这里也是要注意 类型转换 不然 分子小于分母的时候 得出的结果会是 0 
+		fitPic = src.getScaledInstance(PicturePane.this.getWidth(), (int) (PicturePane.this.getWidth() * rate ), Image.SCALE_DEFAULT);
+		PicturePane.this.repaint(); //执行重绘
 	}
 	
 	@Override //绘图操作
@@ -38,12 +52,7 @@ public class PicturePane extends JPanel {
 				int val = fileChooser.showOpenDialog(PicturePane.this);
 				if (val == JFileChooser.APPROVE_OPTION){
 					try {
-						src = ImageIO.read(new FileInputStream(fileChooser.getSelectedFile()));
-						double rate  = (double) PicturePane.this.getHeight() / PicturePane.this.getWidth(); // 这里也是要注意 类型转换 不然 分子小于分母的时候 得出的
-																											// 的结果会使 0 
-						//JOptionPane.showMessageDialog(null, "width = " + PicturePane.this.getHeight());
-						fitPic = src.getScaledInstance(PicturePane.this.getWidth(), (int) (PicturePane.this.getWidth() * rate ), Image.SCALE_DEFAULT);
-						PicturePane.this.repaint();
+						setPic(fileChooser.getSelectedFile().toString());
 					} catch (IOException e1) {
 						//图片打开错误
 					}
