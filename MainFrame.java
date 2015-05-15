@@ -87,7 +87,7 @@ public class MainFrame extends JFrame {
 		tabbedPane.addTab("食物", null, panel_4, null);
 
 		
-		JLabel recommendation = new JLabel("今日推荐:");
+		JLabel recommendation = new JLabel("商品图片:");
 		recommendation.setFont(new Font("微软雅黑", Font.PLAIN, 11));
 		recommendation.setForeground(RandomColor.getColor());
 		recommendation.setBounds(10, 10, 160, 26);
