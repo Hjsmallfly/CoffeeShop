@@ -1,4 +1,4 @@
-﻿package exercise;
+package exercise;
 
 import org.jb2011.lnf.beautyeye.*;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;

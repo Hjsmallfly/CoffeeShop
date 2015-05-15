@@ -1,4 +1,4 @@
-﻿package exercise;
+package exercise;
   
 import javax.swing.*;
 public class ShowFrame {

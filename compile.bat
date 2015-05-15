@@ -1,3 +1,3 @@
 @echo off
-javac -d . -cp lib\beautyeye_lnf.jar;. *.java
+javac -encoding utf-8 -d . -cp lib\beautyeye_lnf.jar;. *.java
 pause
