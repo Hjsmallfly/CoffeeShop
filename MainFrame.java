@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import javax.swing.JComboBox;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
@@ -68,11 +69,16 @@ public class MainFrame extends JFrame {
 		
 		PicturePane showPIC = new PicturePane();
 		showPIC.setBounds(10, 36, 604, 218);
-		showPIC.addPic(this.getClass().getResource("/data/recommendation.jpg").toString().substring(6));
-		showPIC.setPic(0);
-		contentPane.add(showPIC);
+		try{
+			showPIC.addPic(this.getClass().getResource("/data/recommendation.jpg").toString().substring(6));
+			showPIC.setPic(0);
+			contentPane.add(showPIC);
+		}catch(FileNotFoundException e){
+			JOptionPane.showMessageDialog(null, "请不要放在有中文的路径下。这样找不到资源文件!");
+		}
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setForeground(Color.LIGHT_GRAY);
 		tabbedPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		tabbedPane.setBounds(10, 264, 604, 311);
 		contentPane.add(tabbedPane);

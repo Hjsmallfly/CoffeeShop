@@ -29,6 +29,8 @@ public class TabPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public TabPanel() {
+		setBackground(Color.WHITE);
+		setForeground(Color.LIGHT_GRAY);
 		setLayout(null);
 		
 		JComboBox searchBox = new JComboBox(strs);
