@@ -18,6 +18,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -35,8 +36,9 @@ public class MainFrame extends JFrame {
 	 * Launch the application.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws URISyntaxException 
 	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws FileNotFoundException, IOException, URISyntaxException {
 		try {
 			UIManager.put("RootPane.setupButtonVisible",false); //不显示设置按钮
 			BeautyEyeLNFHelper.frameBorderStyle = FrameBorderStyle.translucencyAppleLike;
@@ -54,8 +56,9 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws URISyntaxException 
 	 */
-	public MainFrame() throws FileNotFoundException, IOException {
+	public MainFrame() throws FileNotFoundException, IOException, URISyntaxException {
 		super("Coffee Shop");
 		setResizable(false); //不可调整大小
 		setAlwaysOnTop(true);
@@ -70,11 +73,11 @@ public class MainFrame extends JFrame {
 		PicturePane showPIC = new PicturePane();
 		showPIC.setBounds(10, 36, 604, 218);
 		try{
-			showPIC.addPic(this.getClass().getResource("/data/recommendation.jpg").toString().substring(6));
+			showPIC.addPic(this.getClass().getResource("/data/recommendation.jpg").toURI().getPath()); // 加上toURI 可以解决中文路径的问题
 			showPIC.setPic(0);
 			contentPane.add(showPIC);
 		}catch(FileNotFoundException e){
-			JOptionPane.showMessageDialog(null, "请不要放在有中文的路径下。这样找不到资源文件!");
+			JOptionPane.showMessageDialog(null, "找不到文件!");
 		}
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);

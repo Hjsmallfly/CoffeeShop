@@ -61,6 +61,7 @@ public class TabPanel extends JPanel {
 		textField.setColumns(10);
 		
 		JTextArea txtrHereIsThe = new JTextArea();
+		txtrHereIsThe.setForeground(Color.DARK_GRAY);
 		txtrHereIsThe.setFont(new Font("微软雅黑", Font.PLAIN, 13));
 		txtrHereIsThe.setText("商品描述信息...");
 		txtrHereIsThe.setBounds(10, 82, 161, 100);
