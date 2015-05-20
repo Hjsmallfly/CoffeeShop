@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.JComboBox;
 
 import java.awt.GridLayout;
+import java.awt.ScrollPane;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.UIManager;
 import java.awt.Color;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -23,8 +25,13 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JTextPane;
 
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.JRadioButton;
+
+import exercise.customizegui.ProductList;
+import exercise.product.Beverage;
+import exercise.resourcepath.ResourceFilePath;
 
 public class TabPanel extends JPanel {
 	private JTextField textField;
@@ -50,11 +57,15 @@ public class TabPanel extends JPanel {
 		JList list = new JList(strs);
 		list.setBounds(20, 241, 157, -178);
 		add(list);
+		ArrayList<Beverage> bl = ResourceFilePath.readAllBeverage();
 		
-		JList productListBox = new JList(strs);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 41, 111, 248);
+		add(scrollPane_1);
+		JList productListBox = new ProductList(bl);
+		scrollPane_1.setViewportView(productListBox);
+		
 		productListBox.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "商品", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(99, 108, 113)));
-		productListBox.setBounds(10, 41, 111, 248);
-		add(productListBox);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "商品信息", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -87,42 +98,50 @@ public class TabPanel extends JPanel {
 		btnNewitem.setBounds(10, 215, 74, 23);
 		panel.add(btnNewitem);
 		
+		JComboBox comboBox = new JComboBox(new Object[]{});
+		comboBox.setEditable(true);
+		comboBox.setBounds(-250, 0, 224, 21);
+		panel.add(comboBox);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "订单", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setBounds(316, 41, 287, 248);
 		add(panel_1);
 		panel_1.setLayout(null);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 22, 154, 164);
+		panel_1.add(scrollPane);
+		
 		JList billListBox = new JList(billStrs);
+		scrollPane.setViewportView(billListBox);
 		billListBox.setBorder(new TitledBorder(null, "已点商品", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		billListBox.setBounds(10, 22, 128, 164);
-		panel_1.add(billListBox);
 		
 		JLabel lblCount = new JLabel("数量:");
 		lblCount.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblCount.setBounds(148, 22, 54, 22);
+		lblCount.setBounds(164, 22, 54, 22);
 		panel_1.add(lblCount);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(193, 23, 84, 21);
+		textField_1.setBounds(203, 23, 74, 21);
 		panel_1.add(textField_1);
 		textField_1.setColumns(10);
 		
 		JLabel lblPs = new JLabel("备注:");
 		lblPs.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblPs.setBounds(148, 89, 54, 22);
+		lblPs.setBounds(164, 89, 54, 22);
 		panel_1.add(lblPs);
 		
 		txtAddMoreSugar = new JTextField();
 		txtAddMoreSugar.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		txtAddMoreSugar.setText("多加糖");
 		txtAddMoreSugar.setColumns(10);
-		txtAddMoreSugar.setBounds(193, 90, 84, 21);
+		txtAddMoreSugar.setBounds(203, 90, 74, 21);
 		panel_1.add(txtAddMoreSugar);
 		
 		JLabel lblCost = new JLabel("订单价格:");
 		lblCost.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblCost.setBounds(148, 121, 89, 15);
+		lblCost.setBounds(164, 121, 89, 15);
 		panel_1.add(lblCost);
 		
 		JLabel label = new JLabel("$9.9");
@@ -132,7 +151,7 @@ public class TabPanel extends JPanel {
 		
 		JLabel lblIncon = new JLabel("收款:");
 		lblIncon.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblIncon.setBounds(148, 146, 54, 15);
+		lblIncon.setBounds(164, 146, 54, 15);
 		panel_1.add(lblIncon);
 		
 		JLabel label_1 = new JLabel("$9.9");
@@ -142,7 +161,7 @@ public class TabPanel extends JPanel {
 		
 		JLabel lblDiff = new JLabel("找出:");
 		lblDiff.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblDiff.setBounds(148, 171, 54, 15);
+		lblDiff.setBounds(164, 171, 54, 15);
 		panel_1.add(lblDiff);
 		
 		JLabel label_2 = new JLabel("$0.0");
@@ -152,12 +171,12 @@ public class TabPanel extends JPanel {
 		
 		JLabel lblPrize = new JLabel("总价格:");
 		lblPrize.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblPrize.setBounds(148, 54, 54, 22);
+		lblPrize.setBounds(164, 54, 54, 22);
 		panel_1.add(lblPrize);
 		
 		textField_2 = new JTextField();
 		textField_2.setColumns(10);
-		textField_2.setBounds(193, 54, 84, 21);
+		textField_2.setBounds(203, 54, 74, 21);
 		panel_1.add(textField_2);
 		
 		JButton btnNewButton = new JButton("确认订单");

@@ -1,9 +1,16 @@
 package exercise.product;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
+
+import javax.swing.JOptionPane;
 
 import exercise.factory.BeverageFactory;
+import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasIngredient;
 import exercise.usefulinterface.HasSize;
 
@@ -40,7 +47,6 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 		
 	}
 	
-	
 	/*get方法*/
 	
 	@Override
@@ -54,7 +60,7 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	}
 	
 	@Override
-	public double getCost(){
+	public double figureCost(){
 		double sum = 0.0;
 		/*if (ingredients.size() == 0)
 			System.out.print("it's zero");
@@ -90,6 +96,20 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	//暂时未实现
 	public Production removeIngredient(Ingredient ingredient){
 		return this;
+	}
+	
+	public static void main(String[] args) {
+		Random rand = new Random();
+		Beverage beverage = null;
+//		for(int i = 0 ; i < 100 ; ++i){
+//			beverage = BeverageFactory.createBeverage("Espresso" + rand.nextInt(100), LARGE);
+//		}
+//		System.out.println(beverage.getAllSaleInfo());
+		
+//		for(int i = 0 ; i < 100 ; ++i){
+//			BeverageFactory.createNewBeverage("SmallFlyCoffee" + i, rand.nextDouble(), "this is a virtual coffee");
+//		}
+		
 	}
 	
 }

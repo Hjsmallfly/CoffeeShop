@@ -3,6 +3,8 @@ package exercise;
 import org.jb2011.lnf.beautyeye.*;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
 
+import exercise.resourcepath.ResourceFilePath;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -73,7 +75,7 @@ public class MainFrame extends JFrame {
 		PicturePane showPIC = new PicturePane();
 		showPIC.setBounds(10, 36, 604, 218);
 		try{
-			showPIC.addPic(this.getClass().getResource("/data/recommendation.jpg").toURI().getPath()); // 加上toURI 可以解决 中文路径 以及不同系统间 的问题
+			showPIC.addPic(this.getClass().getResource(ResourceFilePath.resourceDirectory + "/Logo.jpg").toURI().getPath()); // 加上toURI 可以解决 中文路径 以及不同系统间 的问题
 			showPIC.setPic(0);
 			contentPane.add(showPIC);
 		}catch(FileNotFoundException e){

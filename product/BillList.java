@@ -28,7 +28,7 @@ public class BillList {
 	}
 	
 	public void add(Production p){
-		billList.put(p.getSpecific(), p);
+		billList.put(p.getSpecific(), p); //这样确保可以十分细致的规划
 	}
 	
 	public static void main(String[] args) {

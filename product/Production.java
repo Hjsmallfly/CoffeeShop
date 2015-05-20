@@ -3,6 +3,8 @@ package exercise.product;
 import java.util.HashMap;
 import java.util.Map;
 
+import exercise.resourcepath.ResourceFilePath;
+
 /**
  * 所有商品的父类
  * @author STU_nwad
@@ -29,8 +31,9 @@ public abstract class Production {
 	 */
 	public abstract String getSpecific(); //返回该商品的具体信息
 	
-//	public abstract boolean saveTofile(); //保存信息到文件里面
-	
+	public boolean saveTofile(){ //保存信息到文件里面
+		return ResourceFilePath.saveToFile(this);
+	}
 //	public abstract boolean readFromfile(); //从文件中读取信息
 	
 	/*抽象方法*/
@@ -78,7 +81,19 @@ public abstract class Production {
 		return customerMSG;
 	}
 	
+	/**
+	 * 返回商品的躶价
+	 * @return
+	 */
 	public  double getCost(){ //具体类应该覆盖掉
+		return cost;
+	}
+	
+	/**
+	 * 统计商品的价格，包括所加的调料
+	 * @return
+	 */
+	public double figureCost(){
 		return cost;
 	}
 	
