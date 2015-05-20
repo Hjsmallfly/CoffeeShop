@@ -32,6 +32,8 @@ import javax.swing.JRadioButton;
 import exercise.customizegui.ProductList;
 import exercise.product.Beverage;
 import exercise.resourcepath.ResourceFilePath;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class TabPanel extends JPanel {
 	private JTextField costTextBox;
@@ -96,6 +98,21 @@ public class TabPanel extends JPanel {
 		
 		
 		JButton editButton = new JButton("编辑");
+		//为按钮添加 动作 监听器
+		editButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (editButton.getText() == "编辑"){
+					editButton.setText("保存");
+					costTextBox.setEditable(true);
+					costTextBox.select(0,costTextBox.getText().length());
+					costTextBox.requestFocus();
+				}else {
+					editButton.setText("编辑");
+					costTextBox.setEditable(false);
+				}
+
+			}
+		});
 		editButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		editButton.setBounds(94, 215, 77, 23);
 		infoPanel.add(editButton);
