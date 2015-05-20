@@ -23,6 +23,6 @@ public class TestOderSystem {
 		for(Beverage beverage : beverages){
 			System.out.println(beverage.getSpecific());
 		}
-		System.out.println( beverages.get(0).getAllSaleInfo());
+		System.out.println( "销量情况:\n" + beverages.get(0).getAllSaleInfo());
 	}
 }
