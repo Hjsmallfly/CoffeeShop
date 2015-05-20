@@ -2,13 +2,18 @@ package exercise;
 
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
+
 import java.awt.GridLayout;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.JList;
 import javax.swing.UIManager;
+
 import java.awt.Color;
+
+import javax.swing.ButtonGroup;
 import javax.swing.JSpinner;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -16,7 +21,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.JTextPane;
+
 import java.awt.Font;
+
+import javax.swing.JRadioButton;
 
 public class TabPanel extends JPanel {
 	private JTextField textField;
@@ -25,6 +33,7 @@ public class TabPanel extends JPanel {
 	private static String[] strs = new String[]{"Mocha","Expresso","Coffee","Others..."};
 	private static String[] billStrs = new String[]{"Mocha 1 x $9.9","Expresso 2 x $6.6","Coffee 3 x $1.0"};
 	private JTextField textField_2;
+	private ButtonGroup sizeSelectBP = new ButtonGroup();
 	/**
 	 * Create the panel.
 	 */
@@ -44,12 +53,12 @@ public class TabPanel extends JPanel {
 		
 		JList productListBox = new JList(strs);
 		productListBox.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "商品", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(99, 108, 113)));
-		productListBox.setBounds(10, 41, 111, 225);
+		productListBox.setBounds(10, 41, 111, 248);
 		add(productListBox);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "商品信息", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(125, 41, 181, 225);
+		panel.setBounds(125, 41, 181, 248);
 		add(panel);
 		panel.setLayout(null);
 		
@@ -64,23 +73,23 @@ public class TabPanel extends JPanel {
 		txtrHereIsThe.setForeground(Color.DARK_GRAY);
 		txtrHereIsThe.setFont(new Font("微软雅黑", Font.PLAIN, 13));
 		txtrHereIsThe.setText("商品描述信息...");
-		txtrHereIsThe.setBounds(10, 82, 161, 100);
+		txtrHereIsThe.setBounds(10, 82, 161, 123);
 		txtrHereIsThe.setBorder(new TitledBorder("商品信息"));
 		panel.add(txtrHereIsThe);
 		
 		JButton editButton = new JButton("编辑");
 		editButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		editButton.setBounds(94, 192, 77, 23);
+		editButton.setBounds(94, 215, 77, 23);
 		panel.add(editButton);
 		
 		JButton btnNewitem = new JButton("新商品");
 		btnNewitem.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		btnNewitem.setBounds(10, 192, 74, 23);
+		btnNewitem.setBounds(10, 215, 74, 23);
 		panel.add(btnNewitem);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "订单", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(316, 41, 287, 225);
+		panel_1.setBounds(316, 41, 287, 248);
 		add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -153,8 +162,23 @@ public class TabPanel extends JPanel {
 		
 		JButton btnNewButton = new JButton("确认订单");
 		btnNewButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		btnNewButton.setBounds(10, 196, 267, 23);
+		btnNewButton.setBounds(10, 215, 267, 23);
 		panel_1.add(btnNewButton);
+		
+		JRadioButton smallJRadio = new JRadioButton("小");
+		smallJRadio.setBounds(20, 192, 57, 23);
+		panel_1.add(smallJRadio);
+		
+		JRadioButton middleJRadio = new JRadioButton("中");
+		middleJRadio.setBounds(79, 192, 54, 23);
+		panel_1.add(middleJRadio);
+		
+		JRadioButton bigJRadio = new JRadioButton("大");
+		bigJRadio.setBounds(139, 192, 73, 23);
+		panel_1.add(bigJRadio);
 
+		sizeSelectBP.add(bigJRadio);
+		sizeSelectBP.add(smallJRadio);
+		sizeSelectBP.add(middleJRadio);
 	}
 }

@@ -15,7 +15,9 @@ public abstract class Production {
 	protected String specificInfo; //具体信息 如 加糖 的咖啡
 	protected String directory = getClass().getSimpleName(); //保存信息的文件夹
 	
-	private static Map<String, Integer> counter = new HashMap<String, Integer>(); //用于记录销量 
+	protected String customerMSG = ""; //客人的特殊要求
+	
+	private static Map<String, Integer> counter = new HashMap<String, Integer>(); //用于记录销量 一开始的Integer会是zero
 	
 	protected int saleCount = 0;
 	
@@ -72,6 +74,10 @@ public abstract class Production {
 	
 	/* get方法 */
 	
+	public String getCustomerMSG(){
+		return customerMSG;
+	}
+	
 	public  double getCost(){ //具体类应该覆盖掉
 		return cost;
 	}
@@ -88,6 +94,11 @@ public abstract class Production {
 		return directory;
 	}
 	
+	@Override
+	public String toString(){
+		return name + " " +  getCost();
+	}
+	
 	/* get方法 */
 	
 	/* set方法集 */
@@ -96,9 +107,12 @@ public abstract class Production {
 	 * 为产品设置好销量计数器
 	 * @param p
 	 */
-
 	public void setName(String name){
 		this.name = name;
+	}
+	
+	public void setCustomerMSG(String msg){
+		this.customerMSG = msg;
 	}
 	
 	public void setDescription(String desc){

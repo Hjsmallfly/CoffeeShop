@@ -4,28 +4,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import exercise.factory.BeverageFactory;
+import exercise.usefulinterface.HasIngredient;
+import exercise.usefulinterface.HasSize;
 
 /**
  * 饮料类
  * @author STU_nwad
  *
  */
-public abstract class Beverage extends Production {
+public abstract class Beverage extends Production implements HasSize , HasIngredient {
 	
 //	private BeverageFactory factory = new BeverageFactory();
 	
 	protected ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>(); //保存是否加了调料 
 	
 	protected int size;//饮料的 大 中 小 杯
-	
-	//用常量定义大小
-	public static final int LARGE = 0;
-	public static final int MIDDLE = 1;
-	public static final int SMALL = 2;
-	public static String[] sizeStr = new String[]{"大杯","中杯","小杯"};
-	
-	
-	
+		
 	/*构造函数*/
 	public Beverage() {
 		
@@ -71,18 +65,31 @@ public abstract class Beverage extends Production {
 		return sum + cost;
 	}
 	
+	@Override
+	public int getSize() {
+		return size;
+	};
+	
 	/*get方法*/
 	
 	
 	/* set方法集 */
+	@Override
 	public void setSize(int size){
 		this.size = size;
 	}
 	
-	public void addIngredient(Ingredient... ingredient){
+	@Override
+	public Beverage addIngredient(Ingredient... ingredient){
 		ingredients.addAll(Arrays.asList(ingredient));
+		return this;
 	}
 	
 	/* set方法集 */
+	
+	//暂时未实现
+	public Production removeIngredient(Ingredient ingredient){
+		return this;
+	}
 	
 }

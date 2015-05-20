@@ -1,7 +1,7 @@
 package exercise.factory;
 
 import exercise.product.Beverage;
-import exercise.product.Expresso;
+import exercise.product.Espresso;
 import exercise.product.SmallFlyCoffee;
 
 /**
@@ -17,8 +17,8 @@ public class BeverageFactory {
 	 */
 	public static Beverage createBeverage(String name,int size){
 		Beverage beverage = null;
-		if (name.equals("Expresso")){
-			beverage = new Expresso(size);
+		if (name.equals("Espresso")){
+			beverage = new Espresso(size);
 		}else if(name.equals("SmallFlyCoffee")){
 			beverage = new SmallFlyCoffee(size);
 		}

@@ -64,7 +64,7 @@ public class MainFrame extends JFrame {
 		setAlwaysOnTop(true);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 674,696);
+		setBounds(100, 100, 674,705);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -83,7 +83,7 @@ public class MainFrame extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setForeground(Color.LIGHT_GRAY);
 		tabbedPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		tabbedPane.setBounds(10, 264, 604, 311);
+		tabbedPane.setBounds(10, 264, 604, 328);
 		contentPane.add(tabbedPane);
 		
 		JPanel tab1 = new TabPanel();
@@ -104,7 +104,7 @@ public class MainFrame extends JFrame {
 		
 		JButton btnLog = new JButton("全部订单");
 		btnLog.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		btnLog.setBounds(474, 585, 140, 23);
+		btnLog.setBounds(473, 602, 140, 23);
 		contentPane.add(btnLog);
 	}
 }

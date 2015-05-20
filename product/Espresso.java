@@ -1,10 +1,10 @@
 package exercise.product;
 
-public class Expresso extends Beverage {	
+public class Espresso extends Beverage {	
 	
-	public Expresso(int size){
+	public Espresso(int size){
 		super(size);
-		name = "Expresso";
+		name = "Espresso";
 		description = "this is Expresso Coffee";
 		cost = 0.99;
 	}
