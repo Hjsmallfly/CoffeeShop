@@ -19,7 +19,7 @@ public abstract class Ingredient extends Production{
 	//写入文件
 	@Override
 	public boolean saveTofile(){
-		RandomAccessFile f = ResourceFilePath.openFile(ResourceFilePath.beverageDirectory + "/" +  name);
+		RandomAccessFile f = ResourceFilePath.openFile(ResourceFilePath.beverageDirectory + "/" +  name,"rw");
 		if (f == null)
 			return false;
 		try {

@@ -4,10 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import exercise.customizegui.ErrorDialog;
 import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
 import exercise.product.Production;
@@ -22,9 +24,9 @@ public class ResourceFilePath {
 	public static final String recordDirectory = productDirectory + "/record"; //存放记录的文件夹
 	public static final String saleRecordDirectory = recordDirectory + "/salerecord"; //订单
 	public static String rootDirectory = null; 
-	static{
+	static{ //得到根目录的绝对位置
 		try {
-			rootDirectory = ResourceFilePath.class.getResource("/").toURI().getPath(); //得到根目录的绝对位置
+			rootDirectory = ResourceFilePath.class.getResource("/").toURI().getPath();
 		} catch (URISyntaxException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
@@ -36,26 +38,28 @@ public class ResourceFilePath {
 	 * 记得关闭返回的文件
 	 * @return 可读写的文件或者null
 	 */
-	public static RandomAccessFile readBeverage(){
-		try {
-			RandomAccessFile beverageFile = new RandomAccessFile(beverageDirectory + "/" + BeverageList, "rw");//可读可写
-			return beverageFile;
-		} catch (FileNotFoundException e) {
-			//JOptionPane.showMessageDialog(null, "找不到" + beverageDirectory  + "/" + BeverageList);
-			return null;
-		} 
-	}
+//	public static RandomAccessFile readBeverage(){
+//		try {
+//			RandomAccessFile beverageFile = new RandomAccessFile(beverageDirectory + "/" + BeverageList, "rw");//可读可写
+//			return beverageFile;
+//		} catch (FileNotFoundException e) {
+//			//JOptionPane.showMessageDialog(null, "找不到" + beverageDirectory  + "/" + BeverageList);
+//			return null;
+//		} 
+//	}
 	
 	/**
-	 * 注意关闭返回的文件。
-	 * @param path 文件的路径
+	 * 如果是rw模式的话 文件不存在的话 便会创建。若是r模式文件不存在的话返回null
+	 * @param path	文件路径
+	 * @param model r 或者 rw 
 	 * @return
 	 */
-	public static RandomAccessFile openFile(String path){
+	public static RandomAccessFile openFile(String path,String model){
 		try {
-			RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" +  path, "rw");
+			RandomAccessFile file = new RandomAccessFile(rootDirectory + "/" +  path, model);
 			return file;
 		} catch (FileNotFoundException e) {
+			//ErrorDialog.showErrorMessage(null, "找不到文件:" + rootDirectory + "/" +  path );
 			return null;
 		}
 	}
@@ -73,7 +77,7 @@ public class ResourceFilePath {
 		else if (p instanceof Beverage)
 			path = beverageDirectory;
 		
-		RandomAccessFile f = openFile(path + "/" +  p.getName());
+		RandomAccessFile f = openFile(path + "/" +  p.getName(),"rw");
 		
 		if (f == null){
 			return false;
@@ -97,40 +101,58 @@ public class ResourceFilePath {
 		return true;
 	}
 	
+	
+	/**
+	 * 读取清单中所有的饮料
+	 * @return null 如果找不到清单文件
+	 */
 	public static ArrayList<Beverage> readAllBeverage(){
 		ArrayList<Beverage> all = new ArrayList<Beverage>();
-		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList);
+		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList,"r");
 		if (file == null){
-			System.err.println("找不到文件");
+			ErrorDialog.showErrorMessage(null, "找不到 " + productDirectory + "/" + BeverageList, "找不到文件");
 			return null;
 		}
+		StringBuilder errMsg = new StringBuilder(); //用于统计找不到的文件
+		boolean missFiles = false;
 		String name = null;
 		String beverageName = null;
 		double cost = 0.0;
 		String description = null;
 		try {
-			while( file.getFilePointer() != file.length() ){
-				name = file.readUTF();
-				RandomAccessFile info = openFile(beverageDirectory + "/" + name);
-				cost = Double.parseDouble(info.readUTF());
-				beverageName = info.readUTF();
-				description = info.readUTF();
-				all.add((BeverageFactory.createNewBeverage(beverageName, cost, description)));
-				info.close();
+			for(; file.getFilePointer() != file.length() ; ){
+				name = file.readUTF();	
+				RandomAccessFile info = openFile(beverageDirectory + "/" + name,"r");
+				if (info != null){
+					try{	
+						cost = Double.parseDouble(info.readUTF());
+						beverageName = info.readUTF();
+						description = info.readUTF();
+					}catch(IOException e){
+						ErrorDialog.showErrorMessage(null, ResourceFilePath.beverageDirectory + "/"  + name + " 文件损坏", "文件损坏");
+						continue; //跳过添加的动作 帅气~
+					}
+					all.add((BeverageFactory.createNewBeverage(beverageName, cost, description)));
+				}else {
+					missFiles = true;
+					errMsg.append(beverageDirectory + "/" + name + "\n");
+				}
+				if (info != null)
+					info.close();
 			}
+			if (missFiles)
+				ErrorDialog.showErrorMessage(null, "找不到下列文件:\n" +  errMsg.toString(),"找不到文件");
 			file.close();
 			return all;
-		} catch (Exception e) {
-			e.printStackTrace();
-			
+		} catch (IOException e) {
+			ErrorDialog.showErrorMessage(null, e.toString(), e.toString());
 		}
-		return null;
-
+		return all;
 	}
 	
 	public static void writeAllBeverage(){
 		String name = "SmallFlyCoffee";
-		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList);
+		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList,"rw");
 		try {
 			file.writeUTF(name);
 			for(int i = 0 ; i < 100 ; ++i)
@@ -142,15 +164,15 @@ public class ResourceFilePath {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		ArrayList<Beverage> bl = readAllBeverage();
-		if (bl == null){
-			System.err.println("NULL");
-			return ;
-		}
-		for(Beverage b : bl){
-			System.out.println(b.getSpecific());
-		}
-		System.out.println(bl.get(0).getAllSaleInfo());
+//		ArrayList<Beverage> bl = readAllBeverage();
+//		if (bl == null){
+//			System.err.println("NULL");
+//			return ;
+//		}
+//		for(Beverage b : bl){
+//			System.out.println(b.getSpecific());
+//		}
+//		System.out.println(bl.get(0).getAllSaleInfo());
 	}
 	
 }

@@ -28,7 +28,13 @@ public class ProductList extends JList<Production> {
 		setList(p);
 	}
 	
+	/**
+	 * 
+	 * @param p 商品的列表
+	 */
 	public void setList(ArrayList p){
+		if (p == null)
+			return;
 		productionArray = p;
 		for(Object o : p){		//添加数据
 			productionListModel.addElement(o);

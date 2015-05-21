@@ -43,8 +43,6 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	public static Beverage order(String type,int size){
 		return 
 				BeverageFactory.createBeverage(type,size);
-		
-		
 	}
 	
 	/*get方法*/
@@ -55,7 +53,7 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 		sb.append(name + "(" + sizeStr[size] + ") ");
 		for(Ingredient i : ingredients)
 			sb.append(i.getName() + " ");
-		sb.append(getCost());
+		//sb.append(getCost());
 		return sb.toString();
 	}
 	
@@ -75,6 +73,10 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	public int getSize() {
 		return size;
 	};
+	
+	public ArrayList<Ingredient> getIngredients(){
+		return ingredients;
+	}
 	
 	/*get方法*/
 	

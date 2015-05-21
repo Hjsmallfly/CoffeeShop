@@ -3,6 +3,8 @@ package exercise;
 import org.jb2011.lnf.beautyeye.*;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
 
+import exercise.customizegui.ErrorDialog;
+import exercise.product.Espresso;
 import exercise.resourcepath.ResourceFilePath;
 
 import java.awt.BorderLayout;
@@ -13,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 
@@ -32,9 +36,9 @@ import javax.swing.JButton;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 	JTabbedPane MainTabbedPane = new JTabbedPane(JTabbedPane.TOP);
-	JPanel beverageTab = new TabPanel();
+	TabPanel beverageTab = new TabPanel();
 	private JPanel contentPane;
-	JPanel foodTab = new TabPanel();
+	TabPanel foodTab = new TabPanel();
 	JLabel recommendation = new JLabel("商品图片:");
 	JButton btnLog = new JButton("全部订单");
 	/**
@@ -56,6 +60,23 @@ public class MainFrame extends JFrame {
 		MainFrame f = new MainFrame();
 		ShowFrame.run(f,f.getWidth(),f.getHeight());
 	}
+	
+	/**
+	 * 为组件添加各种事件
+	 */
+	public void addListeners(){
+		MainTabbedPane.addChangeListener(new ChangeListener() { //这里用匿名内部类，是因为要用到MainFrame中的其他参数
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				JTabbedPane t = (JTabbedPane) e.getSource();
+				int index = t.getSelectedIndex();
+				if (index != -1){
+					//do something
+				}
+			}
+		});
+	}
 
 	/**
 	 * Create the frame.
@@ -66,7 +87,9 @@ public class MainFrame extends JFrame {
 	public MainFrame() throws FileNotFoundException, IOException, URISyntaxException {
 		super("Coffee Shop");
 		setResizable(false); //不可调整大小
-		setAlwaysOnTop(true);
+		//setAlwaysOnTop(true);
+		
+		addListeners();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 779,838);
@@ -82,7 +105,7 @@ public class MainFrame extends JFrame {
 			showPIC.setPic(0);
 			contentPane.add(showPIC);
 		}catch(FileNotFoundException e){
-			JOptionPane.showMessageDialog(null, "找不到文件!");
+			JOptionPane.showMessageDialog(null, "找不到data/pic/logo.jpg文件");
 		}
 		
 		
@@ -94,13 +117,12 @@ public class MainFrame extends JFrame {
 		String[] strs = new String[]{"Mocha","Expreeso","Caffee"};
 		
 		
+		MainTabbedPane.addTab("饮料", null, beverageTab, null);
+		beverageTab.setLayout(null);
+		beverageTab.setCategory(new Espresso(0)); //意思是显示饮料
+		
 		MainTabbedPane.addTab("食物", null, foodTab, null);
 		
-		
-		
-		MainTabbedPane.addTab("咖啡", null, beverageTab, null);
-		beverageTab.setLayout(null);
-
 		
 		
 		recommendation.setFont(new Font("微软雅黑", Font.PLAIN, 11));

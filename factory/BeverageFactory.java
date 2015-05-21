@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 
+import exercise.customizegui.ErrorDialog;
 import exercise.product.Beverage;
 import exercise.product.Espresso;
 import exercise.product.SmallFlyCoffee;
@@ -22,19 +23,19 @@ public class BeverageFactory {
 	 */
 	public static Beverage createBeverage(String name,int size){
 		Beverage beverage = null;
-		RandomAccessFile file = ResourceFilePath.openFile(ResourceFilePath.beverageDirectory + "/"  + name);
+		RandomAccessFile file = ResourceFilePath.openFile(ResourceFilePath.beverageDirectory + "/"  + name,"rw");
 		if (file != null){
 			try {
 				beverage = new Beverage() {
-					{
+					{ //代码块 用于初始化咯
 						cost = Double.parseDouble(file.readUTF());
 						setName(file.readUTF());
 						description = file.readUTF();
 					}
 				};
 			} catch (IOException e) {
-				// TODO 自动生成的 catch 块
-				e.printStackTrace();
+				ErrorDialog.showErrorMessage(null, ResourceFilePath.beverageDirectory + "/"  + name + " 文件损坏", "文件损坏");
+				beverage = null;
 			}finally{
 				try {
 					file.close();
