@@ -3,9 +3,7 @@ package exercise;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
 
-import java.awt.CheckboxGroup;
-import java.awt.GridLayout;
-import java.awt.ScrollPane;
+
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -18,15 +16,13 @@ import java.awt.Color;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
-import javax.swing.border.LineBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.JTextPane;
+
+
+
 
 import java.awt.Font;
 import java.util.ArrayList;
@@ -34,9 +30,11 @@ import java.util.Enumeration;
 
 import javax.swing.JRadioButton;
 
+import exercise.customizegui.BillJList;
 import exercise.customizegui.ErrorDialog;
 import exercise.customizegui.ProductList;
 import exercise.product.Beverage;
+import exercise.product.BillList;
 import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasIngredient;
@@ -44,6 +42,8 @@ import exercise.usefulinterface.HasSize;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JCheckBox;
 
@@ -52,7 +52,7 @@ import javax.swing.JCheckBox;
  * @author STU_nwad
  *
  */
-public class TabPanel extends JPanel implements ListSelectionListener {
+public class TabPanel extends JPanel implements ListSelectionListener,MouseListener {
 	private JTextField costTextBox; //右边的价格box
 	private JTextField countTextBox;	//右边的数量box
 	private JTextField psTextBox;	//右边的备注box
@@ -60,7 +60,7 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 	private static String[] strs = new String[]{"Mocha","Expresso","Coffee","Others..."};
 	private static String[] billStrs = new String[]{"Mocha 1 x $9.9","Expresso 2 x $6.6","Coffee 3 x $1.0"};
 	private JTextField totalCostTextBox;	//右边的总价box
-	JList billListBox = new JList(billStrs);
+	BillJList billListBox = new BillJList();
 	private ButtonGroup sizeSelectBP = new ButtonGroup();
 	JCheckBox chckbxIce = new JCheckBox("Ice");
 	JCheckBox chckbxMilk = new JCheckBox("Milk");
@@ -69,6 +69,9 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 	//Creating a set of buttons with the same ButtonGroup object means that turning "on" one of those buttons turns off all other buttons in the group.
 	JTextArea descriptionTextArea = new JTextArea();
 	private JTextField incomeTextBox;
+	private BillList billList = new BillList(); //管理订单
+	
+	JLabel totalCostLabel = new JLabel("$0.0");
 	
 	public void setCategory(Production p){
 		if (p instanceof Beverage){ //如果是饮料类的话
@@ -129,6 +132,7 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 		
 		
 		productListBox.addListSelectionListener(this);
+		productListBox.addMouseListener(this);
 		scrollPane_1.setViewportView(productListBox); //添加滚动条 
 		
 //		productListBox.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "商品", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(99, 108, 113)));
@@ -192,7 +196,8 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 		scrollPane.setBounds(30, 22, 184, 214);
 		billPanel.add(scrollPane);
 		billListBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		
+		billListBox.setBillList(billList);
+		billListBox.addListSelectionListener(this);
 		
 		scrollPane.setViewportView(billListBox);
 //		billListBox.setBorder(new TitledBorder(null, "已点商品", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -203,6 +208,7 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 		billPanel.add(lblCount);
 		
 		countTextBox = new JTextField();
+		countTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		countTextBox.setBounds(268, 22, 54, 21);
 		billPanel.add(countTextBox);
 		countTextBox.setColumns(10);
@@ -225,10 +231,11 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 		lblCost.setBounds(224, 134, 54, 15);
 		billPanel.add(lblCost);
 		
-		JLabel label = new JLabel("$9.9");
-		label.setForeground(Color.RED);
-		label.setBounds(288, 134, 44, 15);
-		billPanel.add(label);
+		
+		totalCostLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		totalCostLabel.setForeground(Color.RED);
+		totalCostLabel.setBounds(288, 134, 44, 15);
+		billPanel.add(totalCostLabel);
 		
 		JLabel lblIncon = new JLabel("收款:");
 		lblIncon.setFont(new Font("微软雅黑", Font.PLAIN, 12));
@@ -240,10 +247,11 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 		lblDiff.setBounds(224, 221, 33, 15);
 		billPanel.add(lblDiff);
 		
-		JLabel label_2 = new JLabel("$0.0");
-		label_2.setForeground(Color.RED);
-		label_2.setBounds(288, 221, 44, 15);
-		billPanel.add(label_2);
+		JLabel oweLabel = new JLabel("$0.0");
+		oweLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		oweLabel.setForeground(Color.RED);
+		oweLabel.setBounds(288, 221, 44, 15);
+		billPanel.add(oweLabel);
 		
 		JLabel lblPrize = new JLabel("总价格:");
 		lblPrize.setFont(new Font("微软雅黑", Font.PLAIN, 12));
@@ -251,6 +259,7 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 		billPanel.add(lblPrize);
 		
 		totalCostTextBox = new JTextField();
+		totalCostTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		totalCostTextBox.setColumns(10);
 		totalCostTextBox.setBounds(268, 72, 54, 21);
 		billPanel.add(totalCostTextBox);
@@ -344,6 +353,59 @@ public class TabPanel extends JPanel implements ListSelectionListener {
 					setCheckoutEnable(false);
 				
 			}
+		}else if(e.getSource() == billListBox){ //账单的话
+			int index = billListBox.getSelectedIndex();
+			if (index == -1)
+				return;
+			countTextBox.setText(billListBox.getSelectedValue().getCount() + "");
+			totalCostTextBox.setText(billListBox.getSelectedValue().figureCost() * billListBox.getSelectedValue().getCount() + "");
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == productListBox && e.getClickCount() == 2){ //双击商品列表的内容  点单
+			if (productListBox.getSelectedIndex() == -1)
+				return ;
+//			ErrorDialog.showErrorMessage(null, productListBox.getSelectedValue().getSpecific(),"");
+			billListBox.addElement(productListBox.getSelectedValue());
+			billList.add(productListBox.getSelectedValue());
+			double sum = 0.0;
+			for(Production p : billList.getProductions()){
+				sum += p.figureCost() * p.getCount(); //这里会莫名多出一些小数位 记得处理一下
+			}
+			
+			totalCostLabel.setText("$" + sum);
+			
+			//这样可以触发 ListSelection事件~借此更新画面
+			billListBox.clearSelection();
+			
+			billListBox.setSelectedIndex(billList.size() - 1);
+		}
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO 自动生成的方法存根
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO 自动生成的方法存根
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO 自动生成的方法存根
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO 自动生成的方法存根
+		
 	}
 }

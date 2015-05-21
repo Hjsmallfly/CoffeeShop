@@ -131,7 +131,7 @@ public abstract class Production implements Countable {
 	
 	@Override
 	public String toString(){
-		return name + " " +  getCost();
+		return name + " " + cost;
 	}
 	
 	/* get方法 */

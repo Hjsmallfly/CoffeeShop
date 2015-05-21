@@ -46,6 +46,10 @@ public class BillList {
 		
 	}
 	
+	public boolean Exist(Production p){
+		return billList.containsKey(p.getSpecific());
+	}
+	
 	public ArrayList<Production> getProductions(){
 		if (billList.isEmpty())
 			return null;
@@ -61,6 +65,11 @@ public class BillList {
 	
 	public boolean isEmpty(){
 		return billList.isEmpty();
+	}
+	
+	public int size(){
+		return  billList.size();
+
 	}
 	
 	public static void main(String[] args) {

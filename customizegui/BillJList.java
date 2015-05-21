@@ -13,12 +13,39 @@ import exercise.product.Production;
  * @author STU_nwad
  *
  */
-public class BillJList extends JList<BillList> {
+public class BillJList extends JList<Production> {
 	private BillList orderList;// = new BillList(); //用于维护数据
 	
-	private DefaultListModel<Production> billListModel = new DefaultListModel<Production>(); 
+	private DefaultListModel billListModel = new DefaultListModel<Production>(); //泛型擦除的原因 
 	
 	public BillJList(BillList bill) {
+		setBillList(bill);
+	}
+	
+	public BillJList(){
+		//empty
+	}
+	
+	public void setBillList(BillList bill){
+		if (bill == null)
+			return;
+		
+		ArrayList<Production> productions = bill.getProductions();
+		if (!bill.isEmpty())
+			for(Production p: productions){
+				billListModel.addElement(p); //添加
+			}
+		setModel(billListModel);
 		this.orderList = bill;
+		
+	}
+	
+	public void addElement(Production p){
+		if (!orderList.Exist(p))
+			billListModel.addElement(p);
+	}
+	
+	public BillList getBillList(){
+		return orderList;
 	}
 }
