@@ -20,19 +20,6 @@ public class ProductList extends JList<Production> {
 	private DefaultListModel productionListModel = new DefaultListModel(); //列表模型
 	
 	private ArrayList productionArray;
-	
-	private JTextField costTextBox; //用于显示价格的TextBox
-	
-	private JTextArea descriptionTextArea; //用于显示商品信息的TextArea
-	
-	public void setCostTextBox(JTextField t){
-		costTextBox = t;
-	}
-	
-	public void setDescriptionTextArea(JTextArea t){
-		descriptionTextArea = t;
-	}
-	
 	/**
 	 * 
 	 * @param p 商品的列表
@@ -47,17 +34,6 @@ public class ProductList extends JList<Production> {
 			productionListModel.addElement(o);
 		}
 		setModel(productionListModel); //设置模型
-		
-		addListSelectionListener(new ListSelectionListener() {
-			
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (getSelectedIndex() != -1){
-					costTextBox.setText((( Production)productionArray.get(getSelectedIndex())).getCost() + " ");
-					descriptionTextArea.setText((( Production)productionArray.get(getSelectedIndex())).description());
-				}
-			}
-		});
 		
 	}
 	

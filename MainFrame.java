@@ -31,9 +31,12 @@ import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-
+	JTabbedPane MainTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+	JPanel beverageTab = new TabPanel();
 	private JPanel contentPane;
-
+	JPanel foodTab = new TabPanel();
+	JLabel recommendation = new JLabel("商品图片:");
+	JButton btnLog = new JButton("全部订单");
 	/**
 	 * Launch the application.
 	 * @throws IOException 
@@ -66,14 +69,14 @@ public class MainFrame extends JFrame {
 		setAlwaysOnTop(true);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 674,705);
+		setBounds(100, 100, 779,838);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		PicturePane showPIC = new PicturePane();
-		showPIC.setBounds(10, 36, 604, 218);
+		showPIC.setBounds(10, 45, 705, 277);
 		try{
 			showPIC.addPic(this.getClass().getResource(ResourceFilePath.resourceDirectory + "/Logo.jpg").toURI().getPath()); // 加上toURI 可以解决 中文路径 以及不同系统间 的问题
 			showPIC.setPic(0);
@@ -82,31 +85,32 @@ public class MainFrame extends JFrame {
 			JOptionPane.showMessageDialog(null, "找不到文件!");
 		}
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setForeground(Color.LIGHT_GRAY);
-		tabbedPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		tabbedPane.setBounds(10, 264, 604, 328);
-		contentPane.add(tabbedPane);
 		
-		JPanel tab1 = new TabPanel();
-		tabbedPane.addTab("咖啡", null, tab1, null);
-		tab1.setLayout(null);
+		MainTabbedPane.setForeground(Color.LIGHT_GRAY);
+		MainTabbedPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		MainTabbedPane.setBounds(10, 332, 716, 385);
+		contentPane.add(MainTabbedPane);
 		
 		String[] strs = new String[]{"Mocha","Expreeso","Caffee"};
 		
-		JPanel panel_4 = new TabPanel();
-		tabbedPane.addTab("食物", null, panel_4, null);
+		
+		MainTabbedPane.addTab("食物", null, foodTab, null);
+		
+		
+		
+		MainTabbedPane.addTab("咖啡", null, beverageTab, null);
+		beverageTab.setLayout(null);
 
 		
-		JLabel recommendation = new JLabel("商品图片:");
+		
 		recommendation.setFont(new Font("微软雅黑", Font.PLAIN, 11));
 		recommendation.setForeground(RandomColor.getColor());
 		recommendation.setBounds(10, 10, 160, 26);
 		contentPane.add(recommendation);
 		
-		JButton btnLog = new JButton("全部订单");
+		
 		btnLog.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		btnLog.setBounds(473, 602, 140, 23);
+		btnLog.setBounds(554, 716, 140, 23);
 		contentPane.add(btnLog);
 	}
 }
