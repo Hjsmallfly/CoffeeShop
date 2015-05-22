@@ -66,4 +66,22 @@ public class BeverageFactory {
 		beverage.saveTofile();
 		return beverage;
 	}
+
+	/**
+	 * 返回饮料对象 
+	 * @param name 饮料名
+	 * @param cost 单价
+	 * @param description 描述
+	 * @param size 大小
+	 * @return
+	 */
+	public static Beverage order(String name,double cost,String description,int size){
+		Beverage beverage = new Espresso(size);
+		beverage.setName(name);
+		beverage.setCost(cost);
+		beverage.setDescription(description);
+		return beverage;
+		
+	}
+
 }

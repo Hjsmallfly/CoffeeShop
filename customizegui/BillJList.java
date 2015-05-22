@@ -45,6 +45,14 @@ public class BillJList extends JList<Production> {
 			billListModel.addElement(p);
 	}
 	
+	/**
+	 * 设置合适的cellRenderer的size
+	 */
+	public void updateCellSize(){
+		setFixedCellHeight(-1);
+		setFixedCellWidth(-1);
+	}
+	
 	public BillList getBillList(){
 		return orderList;
 	}

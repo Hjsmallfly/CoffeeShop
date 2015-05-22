@@ -33,6 +33,10 @@ public class BillList {
 		return sb.toString();
 	}
 	
+	/**
+	 * 会设置相应的count
+	 * @param p
+	 */
 	public void add(Production p){
 		if (p == null)
 			return ;

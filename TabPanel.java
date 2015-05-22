@@ -24,17 +24,25 @@ import javax.swing.event.ListSelectionListener;
 
 
 
+
+
+
+
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.swing.JRadioButton;
 
+import exercise.customizegui.BillCellRenderer;
 import exercise.customizegui.BillJList;
 import exercise.customizegui.ErrorDialog;
 import exercise.customizegui.ProductList;
+import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
 import exercise.product.BillList;
+import exercise.product.Ice;
+import exercise.product.Milk;
 import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasIngredient;
@@ -198,8 +206,10 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		billListBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		billListBox.setBillList(billList);
 		billListBox.addListSelectionListener(this);
+		billListBox.setCellRenderer(new BillCellRenderer());
 		
 		scrollPane.setViewportView(billListBox);
+		scrollPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 //		billListBox.setBorder(new TitledBorder(null, "已点商品", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JLabel lblCount = new JLabel("数量:");
@@ -368,8 +378,12 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			if (productListBox.getSelectedIndex() == -1)
 				return ;
 //			ErrorDialog.showErrorMessage(null, productListBox.getSelectedValue().getSpecific(),"");
-			billListBox.addElement(productListBox.getSelectedValue());
-			billList.add(productListBox.getSelectedValue());
+			Beverage beverage = (Beverage) productListBox.getSelectedValue() ;
+			beverage = BeverageFactory.order(beverage.getName(), beverage.getCost(), beverage.description(),HasSize.LARGE);
+			billListBox.addElement( beverage.addIngredient(new Ice(),new Milk())); //相当于订单咯
+			billList.add(beverage); //这样可以避免改到productionList里面的内容
+			if (billList.size() == 1)
+				billListBox.updateCellSize(); //不然加第一个元素的时候 此存会不对...
 			double sum = 0.0;
 			for(Production p : billList.getProductions()){
 				sum += p.figureCost() * p.getCount(); //这里会莫名多出一些小数位 记得处理一下

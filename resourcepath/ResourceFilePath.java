@@ -145,13 +145,17 @@ public class ResourceFilePath {
 			file.close();
 			return all;
 		} catch (IOException e) {
-			ErrorDialog.showErrorMessage(null, e.toString(), e.toString());
+			ErrorDialog.showErrorMessage(null, e.getMessage(), e.toString());
+			e.printStackTrace();
 		}
 		return all;
 	}
 	
+	/**
+	 * 修改饮料的清单文件
+	 */
 	public static void writeAllBeverage(){
-		String name = "SmallFlyCoffee";
+		String name = "Coffee";
 		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList,"rw");
 		try {
 			file.writeUTF(name);
@@ -164,15 +168,11 @@ public class ResourceFilePath {
 	}
 	
 	public static void main(String[] args) throws IOException {
-//		ArrayList<Beverage> bl = readAllBeverage();
-//		if (bl == null){
-//			System.err.println("NULL");
-//			return ;
-//		}
-//		for(Beverage b : bl){
-//			System.out.println(b.getSpecific());
-//		}
-//		System.out.println(bl.get(0).getAllSaleInfo());
+		writeAllBeverage();
+		BeverageFactory.createNewBeverage("Coffee", 1.0, "Test Coffee"); //注意与存的时候保持一致
+		for(int i = 0 ; i < 100 ; ++i){
+			Production p = BeverageFactory.createNewBeverage("Coffee" + i, 1.0, "Test Coffee");
+		}
 	}
 	
 }

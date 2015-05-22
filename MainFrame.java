@@ -39,7 +39,7 @@ public class MainFrame extends JFrame {
 	TabPanel beverageTab = new TabPanel();
 	private JPanel contentPane;
 	TabPanel foodTab = new TabPanel();
-	JLabel recommendation = new JLabel("商品图片:");
+	JLabel itemPicture = new JLabel("商品图片:");
 	JButton btnLog = new JButton("全部订单");
 	/**
 	 * Launch the application.
@@ -127,10 +127,10 @@ public class MainFrame extends JFrame {
 		
 		
 		
-		recommendation.setFont(new Font("微软雅黑", Font.PLAIN, 11));
-		recommendation.setForeground(RandomColor.getColor());
-		recommendation.setBounds(10, 10, 160, 26);
-		contentPane.add(recommendation);
+		itemPicture.setFont(new Font("微软雅黑", Font.PLAIN, 11));
+		itemPicture.setForeground(RandomColor.getColor());
+		itemPicture.setBounds(10, 10, 160, 26);
+		contentPane.add(itemPicture);
 		
 		
 		btnLog.setFont(new Font("微软雅黑", Font.PLAIN, 12));
