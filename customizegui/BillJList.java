@@ -18,6 +18,13 @@ public class BillJList extends JList<Production> {
 	
 	private DefaultListModel billListModel = new DefaultListModel<Production>(); //泛型擦除的原因 
 	
+	
+	public int indexOf(Object p){
+		if (p == null)
+			return -1;
+		return billListModel.indexOf(p);
+	}
+	
 	public BillJList(BillList bill) {
 		setBillList(bill);
 	}
@@ -43,6 +50,15 @@ public class BillJList extends JList<Production> {
 	public void addElement(Production p){
 		if (!orderList.Exist(p))
 			billListModel.addElement(p);
+	}
+	
+	public void setCount(int count){
+		 Production p = (Production) billListModel.getElementAt(getSelectedIndex());
+		 p.setCount(count);
+		 int index = getSelectedIndex();
+		 //刷新一下数据
+		 clearSelection();
+		 setSelectedIndex(index);
 	}
 	
 	/**

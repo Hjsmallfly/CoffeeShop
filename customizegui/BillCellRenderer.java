@@ -12,6 +12,7 @@ import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import exercise.product.Production;
@@ -27,15 +28,18 @@ public class BillCellRenderer extends JTextArea implements ListCellRenderer {
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		setFont( new Font("微软雅黑", Font.PLAIN, 12) );
-		setRows(3);
+		setRows(2);
 		setColumns(14);
 		setPreferredSize(getPreferredSize());
 		setLineWrap(true); //自动换行
 		setWrapStyleWord(true);
+		TitledBorder titlebBorder = new TitledBorder("");
+		titlebBorder.setTitleColor(Color.blue);
+		setBorder(titlebBorder);
 		list.setFixedCellHeight(getPreferredSize().height);
 		list.setFixedCellWidth(getPreferredSize().width);
 		Production production = (Production) value;
-		setText(production.getSpecific() + "\n" + production.getCount() + " x " + production.figureCost());
+		setText(production.getSpecific() + "\n\t" + production.getCount() + " x " + production.figureCost());
 		 if (isSelected) {
 	            setBackground(Color.GRAY);
 	            setForeground(Color.WHITE);

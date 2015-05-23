@@ -3,6 +3,7 @@ package exercise.product;
 import java.util.HashMap;
 import java.util.Map;
 
+import exercise.customizegui.ErrorDialog;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.Countable;
 
@@ -172,4 +173,19 @@ public abstract class Production implements Countable {
 		++count;
 	}
 	/* set方法集 */
+	
+	/**
+	 * 这里覆盖了equals方法
+	 */
+	@Override
+	public boolean equals(Object obj){
+		if (obj == this)
+			return true;
+		if (obj instanceof Production){
+			if (((Production) obj).getSpecific().equals(getSpecific())){
+				return true;
+			}
+		}
+		return false;
+	}
 }
