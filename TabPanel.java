@@ -5,7 +5,9 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.JList;
+
 import java.awt.Color;
+
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JScrollPane;
@@ -13,9 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.Enumeration;
+
 import javax.swing.JRadioButton;
+
 import exercise.customizegui.BillCellRenderer;
 import exercise.customizegui.BillJList;
 import exercise.customizegui.ErrorDialog;
@@ -24,20 +30,25 @@ import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
 import exercise.product.BillList;
 import exercise.product.Ice;
+import exercise.product.Ingredient;
 import exercise.product.Milk;
 import exercise.product.Production;
 import exercise.product.Sugar;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasIngredient;
 import exercise.usefulinterface.HasSize;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JCheckBox;
 
 /**
@@ -45,7 +56,7 @@ import javax.swing.JCheckBox;
  * @author STU_nwad
  *
  */
-public class TabPanel extends JPanel implements ListSelectionListener,MouseListener,KeyListener {
+public class TabPanel extends JPanel implements ListSelectionListener,MouseListener,KeyListener,ItemListener {
 	private JTextField costTextBox; //右边的价格box
 	private JTextField countTextBox;	//右边的数量box
 	private JTextField psTextBox;	//右边的备注box
@@ -91,13 +102,13 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		setForeground(Color.LIGHT_GRAY);
 		setLayout(null);
 		
-		JComboBox searchBox = new JComboBox(strs);
-		searchBox.setEditable(true);
-		searchBox.setBounds(10, 10, 673, 21);
-		add(searchBox);
-		
-		JList list = new JList(strs);
-		list.setBounds(20, 241, 157, -178);
+//		JComboBox searchBox = new JComboBox(strs);
+//		searchBox.setEditable(true);
+//		searchBox.setBounds(10, 10, 673, 21);
+//		add(searchBox);
+//		
+//		JList list = new JList(strs);
+//		list.setBounds(20, 241, 157, -178);
 		//add(list);
 		//ArrayList<Beverage> bl = ResourceFilePath.readAllBeverage();
 		
@@ -203,6 +214,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		billListBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		billListBox.setBillList(billList);
 		billListBox.addListSelectionListener(this);
+		billListBox.addMouseListener(this);
 		billListBox.setCellRenderer(new BillCellRenderer());
 		
 		scrollPane.setViewportView(billListBox);
@@ -401,9 +413,40 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			int index = billListBox.getSelectedIndex();
 			if (index == -1)
 				return;
-			countTextBox.setText(billListBox.getSelectedValue().getCount() + "");
-			totalCostTextBox.setText(billListBox.getSelectedValue().figureCost() * billListBox.getSelectedValue().getCount() + "");
-			psTextBox.setText(billListBox.getSelectedValue().getCustomerMSG());
+			Production production = billListBox.getSelectedValue();
+			countTextBox.setText(production.getCount() + "");
+			totalCostTextBox.setText(production.figureCost() * production.getCount() + "");
+			psTextBox.setText(production.getCustomerMSG());
+			//设置 JRadio 和Jcheckbox 的状态
+			if (production instanceof HasSize){
+				int size = ((HasSize) production).getSize();
+				switch (size) {
+				case HasSize.LARGE:
+					bigJRadio.setSelected(true);
+					break;
+				case HasSize.MIDDLE:
+					middleJRadio.setSelected(true);
+					break;
+				case HasSize.SMALL:
+					smallJRadio.setSelected(true);
+					break;
+				default:
+					break;
+				}
+			}
+			
+			if (production instanceof HasIngredient){
+				ArrayList<Ingredient> ingredients = ((HasIngredient) production).getIngredients();
+				if(ingredients.size() == 0)
+					return;
+				if (ingredients.contains(new Ice()))
+					chckbxIce.setSelected(true);
+				if (ingredients.contains(new Milk()))
+					chckbxMilk.setSelected(true);
+				if (ingredients.contains(new Sugar()))
+					chckbxSugar.setSelected(true);
+			}
+			
 		}
 	}
 	
@@ -472,6 +515,17 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			order();
 //			ErrorDialog.showErrorMessage(null, productListBox.getSelectedValue().getSpecific(),"");
 			
+		}else if(e.getSource() == billListBox && e.getClickCount() == 2){ //双击订单列表 删除这一项
+			if (billListBox.getSelectedIndex() == -1)
+				return ;
+			int index = billListBox.getSelectedIndex();
+			billList.remove(billListBox.getSelectedValue());
+			billListBox.remove(billListBox.getSelectedValue());
+			if (index > 0){
+				billListBox.ensureIndexIsVisible(index - 1);
+				billListBox.setSelectedIndex(index - 1);
+			}
+			updateTotalCost();
 		}
 		
 	}
@@ -575,6 +629,12 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	public void keyReleased(KeyEvent e) {
 		// TODO 自动生成的方法存根
 		
+	}
+
+	//处理 JRadio 和 Jcheckbox 事件
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		//
 	}
 
 /* 用于实现 KeyListener */

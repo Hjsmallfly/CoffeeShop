@@ -61,6 +61,11 @@ public class BillJList extends JList<Production> {
 		 setSelectedIndex(index);
 	}
 	
+	public void remove(Production p){
+		orderList.remove(p);
+		billListModel.removeElement(p);
+	}
+	
 	/**
 	 * 设置合适的cellRenderer的size
 	 */

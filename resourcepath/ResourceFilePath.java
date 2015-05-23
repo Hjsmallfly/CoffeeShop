@@ -22,7 +22,8 @@ public class ResourceFilePath {
 	public static final String beverageDirectory = productDirectory + "/beverage"; //饮料类的文件夹
 	public static final String ingredientDirectory = productDirectory + "/ingredient"; //调料类
 	public static final String recordDirectory = productDirectory + "/record"; //存放记录的文件夹
-	public static final String saleRecordDirectory = recordDirectory + "/salerecord"; //订单
+	public static final String saleRecordDirectory = recordDirectory + "/salerecord"; //商品的交易量
+	public static final String billRecordDirectory = recordDirectory + "/billrecord"; //订单信息
 	public static String rootDirectory = null; 
 	static{ //得到根目录的绝对位置
 		try {

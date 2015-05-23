@@ -3,11 +3,13 @@ package exercise.product;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import exercise.TimeData;
 import exercise.customizegui.ErrorDialog;
 import exercise.factory.BeverageFactory;
 import exercise.resourcepath.ResourceFilePath;
@@ -106,28 +108,63 @@ public class BillList {
 	
 	
 	/**
-	 * 保存形式 具体信息 
+	 * 保存形式 具体信息 数量 售价 备注信息 
 	 * @return
 	 */
 	public boolean saveToFile(){
 		long time = System.currentTimeMillis();
-		RandomAccessFile record = ResourceFilePath.openFile(ResourceFilePath.recordDirectory + "/order-" + time , "rw"); //打开文件
+		String currentTime = TimeData.getTimeString(new Date(time));
+		RandomAccessFile record = ResourceFilePath.openFile(ResourceFilePath.billRecordDirectory + "/order-" + currentTime , "rw"); //打开文件
 		if (record == null)
 			return false;
 		try{
 			record.writeInt(getProductions().size()); //记录一共有多少数据
+			record.writeDouble(getBillCost()); //记录这笔账单的总价格 这个记在前面是因为这个数据常常需要用到
 			for(Production production : getProductions()){
 //				record.writeUTF(production.getName());
 				record.writeUTF(production.getSpecific());
+				record.writeInt((int) production.getCount());
 				record.writeDouble(production.figureCost());
 				record.writeUTF(production.getCustomerMSG());
-				//记录下单时间。
 			}
+
+			//记录下单时间。
+			record.writeUTF(currentTime);
+			record.close();
 		}catch(IOException e){
 			ErrorDialog.showErrorMessage(null, "保存订单信息时出错","");
 			return false;
 		}
 		return true;
+	}
+	
+	public void readFromFile(String filename){
+		RandomAccessFile record = ResourceFilePath.openFile(ResourceFilePath.billRecordDirectory + "/" + filename, "r");
+		StringBuilder sb = new StringBuilder();
+		try {
+			int size = record.readInt();
+			sb.append(size);
+			double totalCost = record.readDouble();
+			for(int i = 0 ; i < size ; ++i){ //一共有 size 个商品
+				String specific = record.readUTF();
+				int count = record.readInt();
+				double cost = record.readDouble();
+				String msg = record.readUTF();
+				sb.append( "\n" + specific + " " + count + " x $" + cost + "\nMessage:[" + msg + "]");
+			}
+
+			sb.append("\nIn Total : $" + totalCost);
+			String orderTime = record.readUTF();
+			sb.append("\nTime:" + orderTime);
+			System.out.println(sb.toString());
+			record.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void remove(Production p){
+		billList.remove(p.getSpecific(), p); //注意 removeValue 和这个方法有区别
 	}
 	
 	public static void main(String[] args) {
@@ -136,8 +173,10 @@ public class BillList {
 		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
 		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
 		list.add(BeverageFactory.createBeverage("SmallFlyCoffee10", 0).addIngredient(new Ice()));
-		System.out.println(list.getAllToString());
-		System.out.println(list.getProductions().toString());
+//		System.out.println(list.getAllToString());
+//		System.out.println(list.getProductions().toString());
+		list.saveToFile();
+		list.readFromFile("order-2015.05.23-13.01.01");
 	}
 	
 }

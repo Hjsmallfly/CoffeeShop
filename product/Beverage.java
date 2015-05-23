@@ -97,21 +97,24 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	
 	//暂时未实现
 	public Production removeIngredient(Ingredient ingredient){
+		if (ingredients.contains(ingredient))
+			ingredients.remove(ingredient);
+		return this;
+	}
+	
+	public Production removeAllIngredients(){
+		ingredients.clear();
 		return this;
 	}
 	
 	public static void main(String[] args) {
-		Random rand = new Random();
-		Beverage beverage = null;
-//		for(int i = 0 ; i < 100 ; ++i){
-//			beverage = BeverageFactory.createBeverage("Espresso" + rand.nextInt(100), LARGE);
-//		}
-//		System.out.println(beverage.getAllSaleInfo());
-		
-//		for(int i = 0 ; i < 100 ; ++i){
-//			BeverageFactory.createNewBeverage("SmallFlyCoffee" + i, rand.nextDouble(), "this is a virtual coffee");
-//		}
-		
+		Beverage beverage = BeverageFactory.order("sf", MIDDLE,"None", LARGE);
+		beverage.addIngredient(new Ice(),new Milk());
+		System.out.println(beverage.getSpecific());
+		beverage.removeIngredient(new Ice());
+		System.out.println(beverage.getSpecific());
+		beverage.removeAllIngredients();
+		System.out.println(beverage.getSpecific());
 	}
 	
 }
