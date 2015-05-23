@@ -131,6 +131,9 @@ public class BillList {
 			//记录下单时间。
 			record.writeUTF(currentTime);
 			record.close();
+			ArrayList<String> names = ResourceFilePath.readAllItem(ResourceFilePath.BillList); //维护数据
+			names.add("order-" + currentTime); //加入这个文件名
+			ResourceFilePath.updateItemList(names, ResourceFilePath.BillList);
 		}catch(IOException e){
 			ErrorDialog.showErrorMessage(null, "保存订单信息时出错","");
 			return false;
@@ -138,33 +141,39 @@ public class BillList {
 		return true;
 	}
 	
-	public void readFromFile(String filename){
+	public static String readFromFile(String filename){
 		RandomAccessFile record = ResourceFilePath.openFile(ResourceFilePath.billRecordDirectory + "/" + filename, "r");
 		StringBuilder sb = new StringBuilder();
 		try {
 			int size = record.readInt();
-			sb.append(size);
+			sb.append("一共有 " + size + "件商品:");
 			double totalCost = record.readDouble();
 			for(int i = 0 ; i < size ; ++i){ //一共有 size 个商品
 				String specific = record.readUTF();
 				int count = record.readInt();
 				double cost = record.readDouble();
 				String msg = record.readUTF();
-				sb.append( "\n" + specific + " " + count + " x $" + cost + "\nMessage:[" + msg + "]");
+				sb.append( "\n" + specific + " " + count + " x $" + cost + "\n备注:[" + msg + "]");
 			}
 
-			sb.append("\nIn Total : $" + totalCost);
+			sb.append("\n总价是 : $" + totalCost);
 			String orderTime = record.readUTF();
-			sb.append("\nTime:" + orderTime);
-			System.out.println(sb.toString());
+			sb.append("\n交易时间 :" + orderTime);
+//			System.out.println(sb.toString());
 			record.close();
+			return sb.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
+			return sb.toString();
 		}
 	}
 	
 	public void remove(Production p){
 		billList.remove(p.getSpecific(), p); //注意 removeValue 和这个方法有区别
+	}
+	
+	public void removeAll(){
+		billList.clear();
 	}
 	
 	public static void main(String[] args) {

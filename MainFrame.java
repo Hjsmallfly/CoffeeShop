@@ -3,6 +3,7 @@ package exercise;
 import org.jb2011.lnf.beautyeye.*;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
 
+import exercise.customizegui.BillDialog;
 import exercise.customizegui.ErrorDialog;
 import exercise.product.Espresso;
 import exercise.resourcepath.ResourceFilePath;
@@ -25,6 +26,7 @@ import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -33,6 +35,9 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 	JTabbedPane MainTabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -40,7 +45,7 @@ public class MainFrame extends JFrame {
 	private JPanel contentPane;
 	TabPanel foodTab = new TabPanel();
 	JLabel itemPicture = new JLabel("商品图片:");
-	JButton btnLog = new JButton("全部订单");
+	JButton showBills = new JButton("全部订单");
 	/**
 	 * Launch the application.
 	 * @throws IOException 
@@ -94,14 +99,14 @@ public class MainFrame extends JFrame {
 		addListeners();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 779,838);
+		setBounds(100, 100, 779,781);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		PicturePane showPIC = new PicturePane();
-		showPIC.setBounds(10, 45, 705, 277);
+		showPIC.setBounds(10, 25, 705, 268);
 		try{
 			showPIC.addPic(this.getClass().getResource(ResourceFilePath.resourceDirectory + "/logo.jpg").toURI().getPath()); // 加上toURI 可以解决 中文路径 以及不同系统间 的问题
 			showPIC.setPic(0);
@@ -113,7 +118,7 @@ public class MainFrame extends JFrame {
 		
 		MainTabbedPane.setForeground(Color.LIGHT_GRAY);
 		MainTabbedPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		MainTabbedPane.setBounds(10, 332, 716, 385);
+		MainTabbedPane.setBounds(10, 296, 716, 373);
 		contentPane.add(MainTabbedPane);
 		
 		String[] strs = new String[]{"Mocha","Expreeso","Caffee"};
@@ -121,7 +126,7 @@ public class MainFrame extends JFrame {
 		
 		MainTabbedPane.addTab("饮料", null, beverageTab, null);
 		beverageTab.setLayout(null);
-		beverageTab.setCategory(new Espresso(0)); //意思是显示饮料
+		beverageTab.setCategory(new Espresso(0));
 		
 		MainTabbedPane.addTab("食物", null, foodTab, null);
 		
@@ -129,12 +134,21 @@ public class MainFrame extends JFrame {
 		
 		itemPicture.setFont(new Font("微软雅黑", Font.PLAIN, 11));
 		itemPicture.setForeground(RandomColor.getColor());
-		itemPicture.setBounds(10, 10, 160, 26);
+		itemPicture.setBounds(10, 0, 160, 26);
 		contentPane.add(itemPicture);
+		showBills.setBounds(551, 672, 135, 23);
+		contentPane.add(showBills);
+		showBills.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<String> names = ResourceFilePath.readAllItem(ResourceFilePath.BillList);
+				if (names.size() == 0)
+					ErrorDialog.showErrorMessage(null, "还没有账单记录", "空的账单记录");
+				else
+					BillDialog.showWindow();
+			}
+		});
 		
 		
-		btnLog.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		btnLog.setBounds(554, 716, 140, 23);
-		contentPane.add(btnLog);
+		showBills.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 	}
 }

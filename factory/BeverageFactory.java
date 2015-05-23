@@ -53,7 +53,7 @@ public class BeverageFactory {
 	}
 
 	/**
-	 * 生成新的饮料
+	 * 生成新的饮料 会存入文件中
 	 * @param name 新饮料的名字
 	 * @param cost 新饮料的价格
 	 * @param description 新饮料的描述

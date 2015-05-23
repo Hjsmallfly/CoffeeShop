@@ -52,6 +52,14 @@ public class BillJList extends JList<Production> {
 			billListModel.addElement(p);
 	}
 	
+	/**
+	 * 相当于重置账单状态
+	 */
+	public void removeAll(){
+		orderList.removeAll();
+		billListModel.clear();
+	}
+	
 	public void setCount(int count){
 		 Production p = (Production) billListModel.getElementAt(getSelectedIndex());
 		 p.setCount(count);

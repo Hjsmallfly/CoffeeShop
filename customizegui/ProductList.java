@@ -35,6 +35,7 @@ public class ProductList extends JList<Production> {
 	public void setList(ArrayList p){
 		if (p == null)
 			return;
+		productionListModel.removeAllElements(); //先清空
 		productionArray = p;
 		for(Object o : p){		//添加数据
 			productionListModel.addElement(o);

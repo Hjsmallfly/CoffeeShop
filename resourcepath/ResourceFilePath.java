@@ -33,7 +33,11 @@ public class ResourceFilePath {
 			e.printStackTrace();
 		}
 	}
+	
 	public static final String BeverageList = "all_beverage.txt";
+	public static final String BillList = "billlist.txt"; //存放所有交易记录
+	
+	
 	
 	/**
 	 * 记得关闭返回的文件
@@ -164,7 +168,7 @@ public class ResourceFilePath {
 				file.writeUTF(name + i);
 			file.close();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	
@@ -176,4 +180,47 @@ public class ResourceFilePath {
 		}
 	}
 	
+	/**
+	 * 取得 某种类型 事物的清单
+	 * 目前有 饮料清单 账单的清单
+	 * @param path 相对路径即可 即 绝对路径的前缀会自动得出
+	 * @return 如果返回的list的size是0的话 说明这个文件是新创建的
+	 */
+	public static ArrayList<String> readAllItem(String path){
+		if (path.equals(BeverageList))
+			path = productDirectory + "/"  + BeverageList;
+		else if(path.equals(BillList))
+			path = recordDirectory + "/" + BillList;
+		RandomAccessFile file = openFile(path, "rw");
+
+		ArrayList<String> names = new ArrayList<String>();
+		try{
+			while(file.getFilePointer() != file.length()){
+				names.add(file.readUTF());
+			}
+			file.close();
+			return names;
+		}catch(IOException e){
+			e.printStackTrace();
+			return names;
+		}
+	}
+	
+	public static void updateItemList(ArrayList<String> names,String path){
+		if (names.size() == 0)
+			return;
+		if (path.equals(BeverageList))
+			path = productDirectory + "/"  + BeverageList;
+		if (path.equals(BillList))
+			path = recordDirectory + "/" + BillList;
+		RandomAccessFile file = openFile(path,"rw");
+		try{
+			for(String s : names){
+				file.writeUTF(s);
+			}
+			file.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
 }

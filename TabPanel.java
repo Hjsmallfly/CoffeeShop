@@ -10,6 +10,7 @@ import java.awt.Color;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -25,6 +26,7 @@ import javax.swing.JRadioButton;
 import exercise.customizegui.BillCellRenderer;
 import exercise.customizegui.BillJList;
 import exercise.customizegui.ErrorDialog;
+import exercise.customizegui.NewProductionWindow;
 import exercise.customizegui.ProductList;
 import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
@@ -94,6 +96,10 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		}
 	}
 	
+	public void updateProductionList(){
+		productListBox.setList(ResourceFilePath.readAllBeverage());
+	}
+	
 	/**
 	 * Create the panel.
 	 */
@@ -102,10 +108,10 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		setForeground(Color.LIGHT_GRAY);
 		setLayout(null);
 		
-//		JComboBox searchBox = new JComboBox(strs);
-//		searchBox.setEditable(true);
-//		searchBox.setBounds(10, 10, 673, 21);
-//		add(searchBox);
+		JComboBox searchBox = new JComboBox(strs);
+		searchBox.setEditable(true);
+		searchBox.setBounds(10, 10, 673, 21);
+		add(searchBox);
 //		
 //		JList list = new JList(strs);
 //		list.setBounds(20, 241, 157, -178);
@@ -116,7 +122,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		JPanel infoPanel = new JPanel();
 		infoPanel.setBorder(new TitledBorder(null, "商品信息", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		infoPanel.setBounds(206, 41, 143, 303);
+		infoPanel.setBounds(206, 41, 149, 291);
 		add(infoPanel);
 		infoPanel.setLayout(null);
 		
@@ -129,7 +135,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		costTextBox.setColumns(10);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 82, 129, 155);
+		scrollPane_2.setBounds(10, 82, 129, 139);
 		infoPanel.add(scrollPane_2);
 		scrollPane_2.setViewportView(descriptionTextArea);
 		
@@ -141,7 +147,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 41, 186, 242);
+		scrollPane_1.setBounds(10, 41, 186, 235);
 		add(scrollPane_1);
 		productListBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		
@@ -185,13 +191,8 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			}
 		});
 		editButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		editButton.setBounds(10, 237, 129, 23);
+		editButton.setBounds(10, 231, 129, 23);
 		infoPanel.add(editButton);
-		
-		JButton newProductButton = new JButton("新商品");
-		newProductButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		newProductButton.setBounds(10, 270, 129, 23);
-		infoPanel.add(newProductButton);
 		
 		JComboBox comboBox = new JComboBox(new Object[]{});
 		comboBox.setEditable(true);
@@ -202,14 +203,24 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		costLabel.setBounds(10, 24, 54, 15);
 		infoPanel.add(costLabel);
 		
+		JButton newProductButton = new JButton("新商品");
+		newProductButton.setBounds(10, 262, 129, 23);
+		infoPanel.add(newProductButton);
+		newProductButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				NewProductionWindow.showWindow(TabPanel.this);
+			}
+		});
+		newProductButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		
 		JPanel billPanel = new JPanel();
 		billPanel.setBorder(new TitledBorder(null, "订单", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		billPanel.setBounds(348, 41, 335, 278);
+		billPanel.setBounds(348, 41, 335, 291);
 		add(billPanel);
 		billPanel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(30, 22, 184, 214);
+		scrollPane.setBounds(30, 22, 184, 200);
 		billPanel.add(scrollPane);
 		billListBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		billListBox.setBillList(billList);
@@ -223,7 +234,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		JLabel lblCount = new JLabel("数量:");
 		lblCount.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblCount.setBounds(224, 20, 54, 22);
+		lblCount.setBounds(224, 21, 44, 22);
 		billPanel.add(lblCount);
 		
 		countTextBox = new JTextField();
@@ -235,7 +246,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		JLabel lblPs = new JLabel("备注:");
 		lblPs.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblPs.setBounds(30, 246, 54, 22);
+		lblPs.setBounds(30, 232, 54, 22);
 		billPanel.add(lblPs);
 		
 		psTextBox = new JTextField();
@@ -243,35 +254,35 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		psTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		psTextBox.setText("多加糖");
 		psTextBox.setColumns(10);
-		psTextBox.setBounds(69, 247, 253, 21);
+		psTextBox.setBounds(69, 233, 253, 21);
 		psTextBox.addKeyListener(this);
 		billPanel.add(psTextBox);
 		
 		JLabel lblCost = new JLabel("订单价格:");
 		lblCost.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblCost.setBounds(224, 134, 54, 15);
+		lblCost.setBounds(224, 113, 54, 15);
 		billPanel.add(lblCost);
 		
 		
 		totalCostLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		totalCostLabel.setForeground(Color.RED);
-		totalCostLabel.setBounds(288, 134, 44, 15);
+		totalCostLabel.setBounds(288, 113, 44, 15);
 		billPanel.add(totalCostLabel);
 		
 		JLabel lblIncon = new JLabel("收款:");
 		lblIncon.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblIncon.setBounds(224, 180, 33, 15);
+		lblIncon.setBounds(224, 138, 33, 15);
 		billPanel.add(lblIncon);
 		
 		
 		lblDiff.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		lblDiff.setBounds(224, 221, 33, 15);
+		lblDiff.setBounds(224, 168, 33, 15);
 		billPanel.add(lblDiff);
 		
 
 		oweLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		oweLabel.setForeground(Color.RED);
-		oweLabel.setBounds(288, 221, 44, 15);
+		oweLabel.setBounds(288, 168, 44, 15);
 		billPanel.add(oweLabel);
 		
 		JLabel lblPrize = new JLabel("总价格:");
@@ -291,7 +302,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		incomeTextBox.setText("$9.9");
 		incomeTextBox.setForeground(Color.RED);
 		incomeTextBox.setColumns(10);
-		incomeTextBox.setBounds(288, 177, 44, 21);
+		incomeTextBox.setBounds(288, 138, 34, 21);
 		incomeTextBox.addKeyListener(this);
 		incomeTextBox.addFocusListener(new FocusListener() { //用于处理焦点事件
 			
@@ -314,57 +325,78 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		});
 		billPanel.add(incomeTextBox);
 		
+				
+				
+				
+				JButton submitOrder = new JButton("确认订单");
+				submitOrder.setBounds(10, 264, 316, 23);
+				billPanel.add(submitOrder);
+				submitOrder.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+				submitOrder.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (billList.size() == 0){
+							ErrorDialog.showErrorMessage(null, "订单是空的！","订单中没有货物");
+							return;
+						}
+						
+						if ( billList.saveToFile() ){
+							JOptionPane.showMessageDialog(TabPanel.this, "已经成功保存订单信息");
+							clearState();
+						}else {
+							ErrorDialog.showErrorMessage(null, "保存账单信息失败","");
+						}
+						
+					}
+				});
 		
-		smallJRadio.setBounds(10, 296, 54, 23);
+		
+		smallJRadio.setBounds(10, 282, 54, 23);
 		add(smallJRadio);
 		smallJRadio.setSelected(true); //默认是小杯的
 		sizeSelectBP.add(smallJRadio);
 
-		middleJRadio.setBounds(66, 296, 62, 23);
+		middleJRadio.setBounds(66, 282, 62, 23);
 		add(middleJRadio);
 		sizeSelectBP.add(middleJRadio);
 		
 
-		bigJRadio.setBounds(130, 296, 54, 23);
+		bigJRadio.setBounds(130, 282, 54, 23);
 		add(bigJRadio);
 		
 		//这是添加到按钮组上
 		sizeSelectBP.add(bigJRadio);
 		
 		
-		chckbxIce.setBounds(10, 321, 58, 23);
+		chckbxIce.setBounds(10, 303, 58, 23);
 		chckbxIce.setEnabled(false);
 		add(chckbxIce);
 		
 		
-		chckbxMilk.setBounds(66, 321, 72, 23);
+		chckbxMilk.setBounds(66, 303, 62, 23);
 		chckbxMilk.setEnabled(false);
 		add(chckbxMilk);
 		
 		chckbxSugar.setEnabled(false);
-		chckbxSugar.setBounds(130, 321, 72, 23);
+		chckbxSugar.setBounds(128, 303, 72, 23);
 		add(chckbxSugar);
-
-		
-		
-		
-		JButton submitOrder = new JButton("确认订单");
-		submitOrder.setBounds(359, 321, 316, 23);
-		add(submitOrder);
-		submitOrder.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		submitOrder.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (billList.size() == 0){
-					ErrorDialog.showErrorMessage(null, "订单是空的！","订单中没有货物");
-				}
-				
-			}
-		});
 		
 		setJRadioEnable(false); //默认不可选
 		setCheckoutEnable(false); //默认不可选
+	}
+	
+	/**
+	 * 清空之前的数据
+	 */
+	public void clearState(){
+		billList.removeAll();
+		billListBox.removeAll();
+		costTextBox.setText("");
+		countTextBox.setText("");
+		totalCostTextBox.setText("");
+		psTextBox.setText("");
+		totalCostLabel.setText("");
 	}
 	
 	/**
