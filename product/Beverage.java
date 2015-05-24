@@ -66,7 +66,7 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 		for(Ingredient i : ingredients){
 			sum += i.getCost();
 		}
-		return sum + cost;
+		return sum + getCost(); //这里不能直接用 sum + cost 因为 getCost() 会考虑 size 的问题
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	
 	/* set方法集 */
 	
-	//暂时未实现
+
 	public Production removeIngredient(Ingredient ingredient){
 		if (ingredients.contains(ingredient))
 			ingredients.remove(ingredient);
@@ -106,6 +106,27 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 		ingredients.clear();
 		return this;
 	}
+	
+//	public String toString(){
+//		if (ingredients.size() != 0 ){
+//			return name + ingredients.get(0).getName();
+//		}else {
+//			return name + "没有调味品";
+//		}
+//	}
+	
+	/**
+	 * 因为有大小的因素，所以这里要设置价格
+	 */
+	@Override
+	public double getCost(){
+		if (size == LARGE)
+			return cost * 1.5;
+		if (size == MIDDLE)
+			return cost * 1.25;
+		return cost;
+	}
+	
 	
 	public static void main(String[] args) {
 		Beverage beverage = BeverageFactory.order("sf", MIDDLE,"None", LARGE);

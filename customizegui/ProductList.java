@@ -48,5 +48,16 @@ public class ProductList extends JList<Production> {
 		
 	}
 	
+	/**
+	 * 更新列表的显示
+	 */
+	public void updateState(){
+		int index = getSelectedIndex();
+		if (index != -1){
+			clearSelection();
+			setSelectedIndex(index);
+		}
+	}
+	
 	
 }

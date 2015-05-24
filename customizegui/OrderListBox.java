@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.ListModel;
 
 import exercise.product.BillList;
 import exercise.product.Production;
@@ -13,44 +14,59 @@ import exercise.product.Production;
  * @author STU_nwad
  *
  */
-public class BillJList extends JList<Production> {
-	private BillList orderList;// = new BillList(); //用于维护数据
+public class OrderListBox extends JList<Production> {
+	private BillList orderList = new BillList(); //用于维护数据
 	
 	private DefaultListModel billListModel = new DefaultListModel<Production>(); //泛型擦除的原因 
+	
+	/**
+	 * 依赖于管理数据的list
+	 * @param billList
+	 */
+	public void relyTo(BillList billList){
+		billList.addOrderListBox(this); //回调函数来着
+	}
+	
+	
+	public void setNewListModel(ListModel<Production> productionListModel){
+		setModel(productionListModel); //立马就会显示
+		billListModel = (DefaultListModel) productionListModel;
+	}
+	
+	
 	
 	
 	public int indexOf(Object p){
 		if (p == null)
 			return -1;
-		return billListModel.indexOf(p);
+		DefaultListModel<Production> listModel = (DefaultListModel<Production>) getModel();
+		return listModel.indexOf(p);
 	}
 	
-	public BillJList(BillList bill) {
-		setBillList(bill);
-	}
 	
-	public BillJList(){
-		//empty
-	}
-	
-	public void setBillList(BillList bill){
-		if (bill == null)
-			return;
-		
-		ArrayList<Production> productions = bill.getProductions();
-		if (!bill.isEmpty())
-			for(Production p: productions){
-				billListModel.addElement(p); //添加
-			}
-		setModel(billListModel);
-		this.orderList = bill;
+	public OrderListBox(){
 		
 	}
+	
+
 	
 	public void addElement(Production p){
-		if (!orderList.Exist(p))
-			billListModel.addElement(p);
+		orderList.add(p);
 	}
+	
+	/**
+	 * 加入多个数据
+	 * @param productions
+	 */
+	public void addElement(ArrayList<Production> productions){
+		if (productions == null)
+			return ;
+		for(Production p : productions){
+			orderList.add(p);
+		}
+	}
+	
+
 	
 	/**
 	 * 相当于重置账单状态
@@ -60,11 +76,13 @@ public class BillJList extends JList<Production> {
 		billListModel.clear();
 	}
 	
-	public void setCount(int count){
-		 Production p = (Production) billListModel.getElementAt(getSelectedIndex());
-		 p.setCount(count);
+	
+	/**
+	 * 这里会更新数据的显示
+	 * 
+	 */
+	public void update(){
 		 int index = getSelectedIndex();
-		 //刷新一下数据
 		 clearSelection();
 		 setSelectedIndex(index);
 	}

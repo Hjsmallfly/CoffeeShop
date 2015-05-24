@@ -5,7 +5,9 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
 
 import exercise.customizegui.BillDialog;
 import exercise.customizegui.ErrorDialog;
+import exercise.product.BillList;
 import exercise.product.Espresso;
+import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 
 import java.awt.BorderLayout;
@@ -39,13 +41,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ChangeListener {
+	BillList billList = new BillList(); //用于管理全部账单
 	JTabbedPane MainTabbedPane = new JTabbedPane(JTabbedPane.TOP);
-	TabPanel beverageTab = new TabPanel();
+	TabPanel beverageTab = new TabPanel(billList);
 	private JPanel contentPane;
-	TabPanel foodTab = new TabPanel();
+	TabPanel foodTab = new TabPanel(billList);
 	JLabel itemPicture = new JLabel("商品图片:");
 	JButton showBills = new JButton("全部订单");
+	
+
+	
 	/**
 	 * Launch the application.
 	 * @throws IOException 
@@ -112,13 +118,14 @@ public class MainFrame extends JFrame {
 			showPIC.setPic(0);
 			contentPane.add(showPIC);
 		}catch(FileNotFoundException e){
-			JOptionPane.showMessageDialog(null, "找不到data/pic/logo.jpg文件");
+			JOptionPane.showMessageDialog(null, ResourceFilePath.resourceDirectory + "/logo.jpg");
 		}
 		
 		
 		MainTabbedPane.setForeground(Color.LIGHT_GRAY);
 		MainTabbedPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		MainTabbedPane.setBounds(10, 296, 716, 373);
+		MainTabbedPane.addChangeListener(this);
 		contentPane.add(MainTabbedPane);
 		
 		String[] strs = new String[]{"Mocha","Expreeso","Caffee"};
@@ -128,7 +135,19 @@ public class MainFrame extends JFrame {
 		beverageTab.setLayout(null);
 		beverageTab.setCategory(new Espresso(0));
 		
+		
 		MainTabbedPane.addTab("食物", null, foodTab, null);
+		foodTab.setCategory(new Espresso(0));
+
+//		billList.addOrderListBox(foodTab.getOrderListBox(),beverageTab.getOrderListBox()); //有点像观察者模式
+		
+		//加入了构造函数里面
+//		foodTab.setBillList(billList); //同一份账单
+//		beverageTab.setBillList(billList);
+		
+		foodTab.getOrderListBox().relyTo(billList); //这样感觉更灵活些
+		beverageTab.getOrderListBox().relyTo(billList);
+//		billList.addListDataListener(foodTab,beverageTab); //监听List内容的变化
 		
 		
 		
@@ -150,5 +169,16 @@ public class MainFrame extends JFrame {
 		
 		
 		showBills.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (e.getSource() == MainTabbedPane){
+			if (MainTabbedPane.getSelectedIndex() == 0)
+				beverageTab.updateTotalCost();
+			else {
+				foodTab.updateTotalCost();
+			}
+		}
 	}
 }

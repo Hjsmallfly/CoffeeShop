@@ -9,8 +9,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.DefaultListModel;
+import javax.swing.event.ListDataListener;
+
 import exercise.TimeData;
 import exercise.customizegui.ErrorDialog;
+import exercise.customizegui.OrderListBox;
 import exercise.factory.BeverageFactory;
 import exercise.resourcepath.ResourceFilePath;
 
@@ -22,22 +26,52 @@ import exercise.resourcepath.ResourceFilePath;
 public class BillList {
 	
 	private Map<String, Production> billList = new HashMap<String, Production>(); //用于维护账单数据
-//	private Map<String,Integer> itemCount = new HashMap<String,Integer>(); //用于统计个数 
+	
+	private ArrayList<OrderListBox> orderboxes = new ArrayList<OrderListBox>(); //用于管理加入到这里的 列表框
+	
+	
+	private DefaultListModel<Production> productionListModel = new DefaultListModel<Production>(); //BillList 维护这个 
 	
 	/**
-	 * 将账单里面的所有商品信息转换成字符串
-	 * @return
+	 * 为listdatamodel提供一个接口
+	 * @param listeners
 	 */
-	public String getAllToString(){
-		StringBuilder sb = new StringBuilder();
-		Set<String> keySet = billList.keySet();
-		Iterator<String> it = keySet.iterator(); //产生迭代器
-		while (it.hasNext()){
-			String next = it.next();
-			sb.append(billList.get(next).getSpecific() + " "  + billList.get(next).getCount() + " x $" + billList.get(next).figureCost() + "\n");
+	public void addListDataListener(ListDataListener... listeners){
+		if (listeners.length != 0){
+			for(ListDataListener listener : listeners)
+				productionListModel.addListDataListener(listener);
 		}
-		return sb.toString();
 	}
+	
+	
+	public void addOrderListBox(OrderListBox ... boxes){
+		if (boxes.length != 0){
+			for(int i = 0 ; i < boxes.length ; ++i){
+				boxes[i].setNewListModel(productionListModel); //关联到这个数据模型上
+				orderboxes.add(boxes[i]);
+			}
+		}
+	}
+	
+	public void removeOrderListBox(OrderListBox ...boxes){
+		if (boxes.length != 0){
+			for(int i = 0 ; i < boxes.length ; ++i){
+				orderboxes.remove(boxes[i]);
+				boxes[i].setNewListModel(new DefaultListModel()); //不再跟随这个数据模型了
+			}
+		}
+	}
+	
+	public void removeAllOrderListBox(){
+		if (orderboxes.size() != 0){
+			for(OrderListBox listBox : orderboxes)
+				listBox.setNewListModel(new DefaultListModel());
+		}
+		orderboxes.clear();
+	}
+	
+	
+	
 	
 	/**
 	 * 为特定商品设置数量
@@ -50,7 +84,7 @@ public class BillList {
 	}
 	
 	/**
-	 * 会设置相应的count
+	 * 添加相应的产品到 账单上 自动维护数量
 	 * @param p
 	 */
 	public void add(Production p){
@@ -58,13 +92,45 @@ public class BillList {
 			return ;
 		String feature = p.getSpecific();
 		if (billList.containsKey(feature)){ //如果已经存在这个商品的话
-			billList.get(feature).addCount(); //递增1
+			billList.get(feature).addCount(); //递增1 
+												//这里增加了1同时model那里的数据也会得到更新 
+			if (orderboxes.size() != 0){
+				for(OrderListBox listBox : orderboxes)
+					listBox.update();
+			}
+			
 		}else {
-			p.setCount(1);
-			billList.put(feature, p); //这样确保可以十分细致的统计
+				p.setCount(1);
+				billList.put(feature, p); //这样确保可以十分细致的统计
+				productionListModel.addElement(p); //这个列表也增加这一项 注意这里添加的是引用
+													//所以在 Map 上东这个东西,实际上 productionListModel 里面的内容也被修改了 因为指向同一个对象！
+				if (billList.size() == 1){
+					//加入第一个元素的时候,需要调整ListBox的单元格的大小
+					if (orderboxes.size() != 0)
+						for(OrderListBox listBox : orderboxes){
+							listBox.updateCellSize();
+						}
+				}
 		}
 		
 	}
+	
+	public void add(ArrayList<Production> productions){
+		if (productions != null)
+			for(Production p : productions)
+				add(p);
+	}
+	
+	public void remove(Production p){
+		billList.remove(p.getSpecific(), p); //注意 removeValue 和这个方法有区别
+		productionListModel.removeElement(p);
+	}
+	
+	public void removeAll(){
+		billList.clear();
+		productionListModel.clear();
+	}
+	
 	
 	public boolean Exist(Production p){
 		return billList.containsKey(p.getSpecific());
@@ -100,9 +166,11 @@ public class BillList {
 		if (billList.size() == 0)
 			return 0.0;
 		double sum = 0.0;
-		for(Production p : getProductions()){
-			sum += p.figureCost() * p.getCount(); //这里会莫名多出一些小数位 记得处理一下
-		}
+		ArrayList<Production> productions = getProductions();
+		if (productions != null)
+			for(Production p : productions){
+				sum += p.figureCost() * p.getCount(); //这里会莫名多出一些小数位 记得处理一下
+			}
 		return sum;
 	}
 	
@@ -168,12 +236,23 @@ public class BillList {
 		}
 	}
 	
-	public void remove(Production p){
-		billList.remove(p.getSpecific(), p); //注意 removeValue 和这个方法有区别
-	}
+
 	
-	public void removeAll(){
-		billList.clear();
+
+	
+	/**
+	 * 将账单里面的所有商品信息转换成字符串
+	 * @return
+	 */
+	public String getAllToString(){
+		StringBuilder sb = new StringBuilder();
+		Set<String> keySet = billList.keySet();
+		Iterator<String> it = keySet.iterator(); //产生迭代器
+		while (it.hasNext()){
+			String next = it.next();
+			sb.append(billList.get(next).getSpecific() + " "  + billList.get(next).getCount() + " x $" + billList.get(next).figureCost() + "\n");
+		}
+		return sb.toString();
 	}
 	
 	public static void main(String[] args) {

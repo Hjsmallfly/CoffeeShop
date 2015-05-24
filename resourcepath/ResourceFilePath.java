@@ -13,6 +13,7 @@ import exercise.customizegui.ErrorDialog;
 import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
 import exercise.product.Production;
+import exercise.usefulinterface.HasSize;
 
 
 public class ResourceFilePath {
@@ -137,7 +138,7 @@ public class ResourceFilePath {
 						ErrorDialog.showErrorMessage(null, ResourceFilePath.beverageDirectory + "/"  + name + " 文件损坏", "文件损坏");
 						continue; //跳过添加的动作 帅气~
 					}
-					all.add((BeverageFactory.createNewBeverage(beverageName, cost, description)));
+					all.add((BeverageFactory.createNewBeverage(beverageName, cost, description,HasSize.SMALL))); //默认是小杯
 				}else {
 					missFiles = true;
 					errMsg.append(beverageDirectory + "/" + name + "\n");
@@ -174,9 +175,9 @@ public class ResourceFilePath {
 	
 	public static void main(String[] args) throws IOException {
 		writeAllBeverage();
-		BeverageFactory.createNewBeverage("Coffee", 1.0, "Test Coffee"); //注意与存的时候保持一致
+		BeverageFactory.createNewBeverage("Coffee", 1.0, "Test Coffee",HasSize.SMALL); //注意与存的时候保持一致
 		for(int i = 0 ; i < 100 ; ++i){
-			Production p = BeverageFactory.createNewBeverage("Coffee" + i, 1.0, "Test Coffee");
+			Production p = BeverageFactory.createNewBeverage("Coffee" + i, 1.0, "Test Coffee",HasSize.SMALL);
 		}
 	}
 	

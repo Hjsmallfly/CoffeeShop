@@ -4,7 +4,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
-import javax.swing.JList;
+
 
 import java.awt.Color;
 
@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -24,7 +25,7 @@ import java.util.Enumeration;
 import javax.swing.JRadioButton;
 
 import exercise.customizegui.BillCellRenderer;
-import exercise.customizegui.BillJList;
+import exercise.customizegui.OrderListBox;
 import exercise.customizegui.ErrorDialog;
 import exercise.customizegui.NewProductionWindow;
 import exercise.customizegui.ProductList;
@@ -32,7 +33,7 @@ import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
 import exercise.product.BillList;
 import exercise.product.Ice;
-import exercise.product.Ingredient;
+
 import exercise.product.Milk;
 import exercise.product.Production;
 import exercise.product.Sugar;
@@ -64,9 +65,9 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	private JTextField psTextBox;	//右边的备注box
 	ProductList productListBox = new ProductList();
 	private static String[] strs = new String[]{"Mocha","Expresso","Coffee","Others..."};
-	private static String[] billStrs = new String[]{"Mocha 1 x $9.9","Expresso 2 x $6.6","Coffee 3 x $1.0"};
 	private JTextField totalCostTextBox;	//右边的总价box
-	BillJList billListBox = new BillJList();
+		
+	OrderListBox billListBox = new OrderListBox();
 	
 	JLabel lblDiff = new JLabel("找出:"); //显示找出的label
 	JLabel oweLabel = new JLabel("$0.0"); //显示要找出多少money
@@ -82,13 +83,32 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	JRadioButton bigJRadio = new JRadioButton("大");
 	JRadioButton middleJRadio = new JRadioButton("中");
 	
+	
 //	private CheckboxGroup ingredientChkbox = new CheckboxGroup(); //用来存放 调料的checkbox 复选 
 	//Creating a set of buttons with the same ButtonGroup object means that turning "on" one of those buttons turns off all other buttons in the group.
 	JTextArea descriptionTextArea = new JTextArea();
 	private JTextField incomeTextBox;
-	private BillList billList = new BillList(); //管理订单
+	
+	private BillList billList; //用于管理
 	
 	JLabel totalCostLabel = new JLabel("$0.0");
+	
+	
+	public void setBillList(BillList bill){
+		this.billList = bill;
+	}
+	
+	public OrderListBox getOrderListBox(){
+		return billListBox;
+	}
+	
+	
+	public ArrayList<Production> getProductions(){
+		if ( billList.getProductions() != null)
+			return  billList.getProductions();
+		
+		return null;
+	}
 	
 	public void setCategory(Production p){
 		if (p instanceof Beverage){ //如果是饮料类的话
@@ -101,22 +121,40 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	}
 	
 	/**
+	 * 点击大小的时候 计算不同大小的价钱，然后刷新显示
+	 */
+	private void addListenersOfButtons(){
+		ActionListener updateState = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				productListBox.updateState(); //更新list的显示状态
+				
+			}
+		};
+		smallJRadio.addActionListener(updateState);
+		middleJRadio.addActionListener(updateState);
+		bigJRadio.addActionListener(updateState);
+		
+		chckbxIce.addActionListener(updateState);
+		chckbxMilk.addActionListener(updateState);
+		chckbxSugar.addActionListener(updateState);
+		
+	}
+	
+	/**
 	 * Create the panel.
 	 */
-	public TabPanel() {
+	public TabPanel(BillList billList) {
+		this.billList = billList;
 		setBackground(Color.WHITE);
 		setForeground(Color.LIGHT_GRAY);
 		setLayout(null);
-		
+		addListenersOfButtons();
 		JComboBox searchBox = new JComboBox(strs);
 		searchBox.setEditable(true);
 		searchBox.setBounds(10, 10, 673, 21);
 		add(searchBox);
-//		
-//		JList list = new JList(strs);
-//		list.setBounds(20, 241, 157, -178);
-		//add(list);
-		//ArrayList<Beverage> bl = ResourceFilePath.readAllBeverage();
 		
 
 		
@@ -194,10 +232,10 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		editButton.setBounds(10, 231, 129, 23);
 		infoPanel.add(editButton);
 		
-		JComboBox comboBox = new JComboBox(new Object[]{});
-		comboBox.setEditable(true);
-		comboBox.setBounds(-250, 0, 224, 21);
-		infoPanel.add(comboBox);
+//		JComboBox comboBox = new JComboBox(new Object[]{});
+//		comboBox.setEditable(true);
+//		comboBox.setBounds(-250, 0, 224, 21);
+//		infoPanel.add(comboBox);
 		
 		JLabel costLabel = new JLabel("单价:");
 		costLabel.setBounds(10, 24, 54, 15);
@@ -223,7 +261,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		scrollPane.setBounds(30, 22, 184, 200);
 		billPanel.add(scrollPane);
 		billListBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		billListBox.setBillList(billList);
+//		billListBox.setBillList(billList);
 		billListBox.addListSelectionListener(this);
 		billListBox.addMouseListener(this);
 		billListBox.setCellRenderer(new BillCellRenderer());
@@ -239,7 +277,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		countTextBox = new JTextField();
 		countTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		countTextBox.setBounds(268, 22, 54, 21);
+		countTextBox.setBounds(268, 22, 57, 21);
 		billPanel.add(countTextBox);
 		countTextBox.addKeyListener(this);
 		countTextBox.setColumns(10);
@@ -266,7 +304,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		totalCostLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		totalCostLabel.setForeground(Color.RED);
-		totalCostLabel.setBounds(288, 113, 44, 15);
+		totalCostLabel.setBounds(278, 113, 57, 15);
 		billPanel.add(totalCostLabel);
 		
 		JLabel lblIncon = new JLabel("收款:");
@@ -282,7 +320,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 
 		oweLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		oweLabel.setForeground(Color.RED);
-		oweLabel.setBounds(288, 168, 44, 15);
+		oweLabel.setBounds(278, 168, 44, 15);
 		billPanel.add(oweLabel);
 		
 		JLabel lblPrize = new JLabel("总价格:");
@@ -294,15 +332,15 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		totalCostTextBox.setEditable(false);
 		totalCostTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		totalCostTextBox.setColumns(10);
-		totalCostTextBox.setBounds(268, 72, 54, 21);
+		totalCostTextBox.setBounds(268, 72, 57, 21);
 		billPanel.add(totalCostTextBox);
 		
 		incomeTextBox = new JTextField();
 		incomeTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		incomeTextBox.setText("$9.9");
+		incomeTextBox.setText("$0.0");
 		incomeTextBox.setForeground(Color.RED);
 		incomeTextBox.setColumns(10);
-		incomeTextBox.setBounds(288, 138, 34, 21);
+		incomeTextBox.setBounds(276, 138, 49, 21);
 		incomeTextBox.addKeyListener(this);
 		incomeTextBox.addFocusListener(new FocusListener() { //用于处理焦点事件
 			
@@ -391,7 +429,6 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	 */
 	public void clearState(){
 		billList.removeAll();
-		billListBox.removeAll();
 		costTextBox.setText("");
 		countTextBox.setText("");
 		totalCostTextBox.setText("");
@@ -424,24 +461,45 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			ProductList p = (ProductList)e.getSource();
 			int index = p.getSelectedIndex();
 			if ( index != -1){
-				costTextBox.setText(p.getSelectedValue().getCost() + "");
-				descriptionTextArea.setText(p.getSelectedValue().description());
-				
-				if (p.getSelectedValue() instanceof HasSize){ //如果有大小的选项的话
+				Production production = p.getSelectedValue();
+				if (production instanceof HasSize){ //如果有大小的选项的话
 					setJRadioEnable(true); //设置大小是可以选择的
-//					smallJRadio.setSelected(true); //默认是小杯
+					if (smallJRadio.isSelected())
+						((HasSize) production).setSize(HasSize.SMALL);
+					if (middleJRadio.isSelected())
+						((HasSize) production).setSize(HasSize.MIDDLE);
+					if (bigJRadio.isSelected())
+						((HasSize) production).setSize(HasSize.LARGE);
 				}
 				else {
 					setJRadioEnable(false);
 				}
 				
-				if (p.getSelectedValue() instanceof HasIngredient)
+				if (production instanceof HasIngredient){
+					((HasIngredient) production).removeAllIngredients(); //先删除所有调料
 					setCheckoutEnable(true);
+					if (chckbxIce.isSelected())
+						((HasIngredient) production).addIngredient(new Ice());
+				
+					if (chckbxMilk.isSelected())
+						((HasIngredient) production).addIngredient(new Milk());
+					
+					if (chckbxSugar.isSelected())
+						((HasIngredient) production).addIngredient(new Sugar());
+					
+				}
 				else
 					setCheckoutEnable(false);
 				
+				costTextBox.setText(production.figureCost() + "");
+				
+				descriptionTextArea.setText(production.description());
+
+				
 			}
-		}else if(e.getSource() == billListBox){ //账单的话
+			
+		}
+		else if(e.getSource() == billListBox){ //账单的话
 			int index = billListBox.getSelectedIndex();
 			if (index == -1)
 				return;
@@ -449,40 +507,41 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			countTextBox.setText(production.getCount() + "");
 			totalCostTextBox.setText(production.figureCost() * production.getCount() + "");
 			psTextBox.setText(production.getCustomerMSG());
-			//设置 JRadio 和Jcheckbox 的状态
-			if (production instanceof HasSize){
-				int size = ((HasSize) production).getSize();
-				switch (size) {
-				case HasSize.LARGE:
-					bigJRadio.setSelected(true);
-					break;
-				case HasSize.MIDDLE:
-					middleJRadio.setSelected(true);
-					break;
-				case HasSize.SMALL:
-					smallJRadio.setSelected(true);
-					break;
-				default:
-					break;
-				}
-			}
-			
-			if (production instanceof HasIngredient){
-				ArrayList<Ingredient> ingredients = ((HasIngredient) production).getIngredients();
-				if(ingredients.size() == 0)
-					return;
-				if (ingredients.contains(new Ice()))
-					chckbxIce.setSelected(true);
-				if (ingredients.contains(new Milk()))
-					chckbxMilk.setSelected(true);
-				if (ingredients.contains(new Sugar()))
-					chckbxSugar.setSelected(true);
-			}
-			
+//			//设置 JRadio 和Jcheckbox 的状态
+//			if (production instanceof HasSize){
+//				int size = ((HasSize) production).getSize();
+//				switch (size) {
+//				case HasSize.LARGE:
+//					bigJRadio.setSelected(true);
+//					break;
+//				case HasSize.MIDDLE:
+//					middleJRadio.setSelected(true);
+//					break;
+//				case HasSize.SMALL:
+//					smallJRadio.setSelected(true);
+//					break;
+//				default:
+//					break;
+//				}
+//			}
+//			
+//			if (production instanceof HasIngredient){
+//				ArrayList<Ingredient> ingredients = ((HasIngredient) production).getIngredients();
+//				if(ingredients.size() == 0)
+//					return;
+//				if (ingredients.contains(new Ice()))
+//					chckbxIce.setSelected(true);
+//				if (ingredients.contains(new Milk()))
+//					chckbxMilk.setSelected(true);
+//				if (ingredients.contains(new Sugar()))
+//					chckbxSugar.setSelected(true);
+//			}
+//			
 		}
 	}
 	
 	public void addIngredients(HasIngredient p){
+		p.removeAllIngredients(); //先除去
 		if (chckbxIce.isSelected())
 			p.addIngredient(new Ice());
 		if (chckbxMilk.isSelected())
@@ -501,24 +560,20 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	 */
 	public void order(){
 		Beverage beverage = (Beverage) productListBox.getSelectedValue() ;
-		int size; //判断选择的大小
-		if (smallJRadio.isSelected())
-			size = HasSize.SMALL;
-		else if (middleJRadio.isSelected())
-			size = HasSize.MIDDLE;
-		else {
-			size = HasSize.LARGE;
-		}
-		
-		beverage = BeverageFactory.order(beverage.getName(), beverage.getCost(), beverage.description(),size);
+//		JOptionPane.showMessageDialog(productListBox, beverage.getSpecific() + "\n" + beverage.getCost() + "\n" + beverage.figureCost());
+		//size和价格在都在选的时候就计算好了 所以这里要传进去的是 小杯的money
+		int size = beverage.getSize();
+		beverage.setSize(HasSize.SMALL);
+		double cost = beverage.getCost(); //这样得到是小杯的价格
+		beverage.setSize(size); //重新设置回去
+		beverage = BeverageFactory.order(beverage.getName(),cost, beverage.description(),size);
 		
 		//添加调料
 		addIngredients(beverage);
 		
-		billListBox.addElement( beverage); //相当于订单咯
-		billList.add(beverage); //这样可以避免改到productionList里面的内容
-		if (billList.size() == 1)
-			billListBox.updateCellSize(); //不然加第一个元素的时候 尺寸 会不对...
+		billList.add(beverage);
+//		if (billList.size() == 1)
+//			billListBox.updateCellSize(); //不然加第一个元素的时候 尺寸 会不对...
 		
 		updateTotalCost(); //修改显示得总价格
 		
@@ -552,7 +607,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 				return ;
 			int index = billListBox.getSelectedIndex();
 			billList.remove(billListBox.getSelectedValue());
-			billListBox.remove(billListBox.getSelectedValue());
+//			billListBox.remove(billListBox.getSelectedValue());
 			if (index > 0){
 				billListBox.ensureIndexIsVisible(index - 1);
 				billListBox.setSelectedIndex(index - 1);
@@ -607,7 +662,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			billListBox.setEnabled(false);
 			int count = Integer.parseInt(countTextBox.getText());
 			billList.setCount(billListBox.getSelectedValue(), count);
-			billListBox.setCount(count);
+			billListBox.update();
 			billListBox.setEnabled(true);
 			updateTotalCost();
 		}catch(NumberFormatException error){
@@ -668,6 +723,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	public void itemStateChanged(ItemEvent e) {
 		//
 	}
+
 
 /* 用于实现 KeyListener */
 }

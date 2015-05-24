@@ -35,6 +35,7 @@ import javax.swing.JTextArea;
 import exercise.TabPanel;
 import exercise.factory.BeverageFactory;
 import exercise.resourcepath.ResourceFilePath;
+import exercise.usefulinterface.HasSize;
 
 public class NewProductionWindow extends JDialog {
 	private JTextField nameTextBox;
@@ -148,7 +149,7 @@ public class NewProductionWindow extends JDialog {
 						try {
 							double cost = Double.parseDouble(prizeTextBox.getText());
 							String description = textArea.getText();
-							BeverageFactory.createNewBeverage(newItem, cost, description);
+							BeverageFactory.createNewBeverage(newItem, cost, description,HasSize.SMALL);
 							beverageNames.add(newItem); //维护商品列表
 							ResourceFilePath.updateItemList(beverageNames, ResourceFilePath.BeverageList);
 							JOptionPane.showMessageDialog(NewProductionWindow.this, "成功加入商品");

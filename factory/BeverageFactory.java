@@ -58,8 +58,8 @@ public class BeverageFactory {
 	 * @param cost 新饮料的价格
 	 * @param description 新饮料的描述
 	 */
-	public static Beverage createNewBeverage(String name,double cost,String description){
-		Beverage beverage = new Espresso(0);
+	public static Beverage createNewBeverage(String name,double cost,String description,int size){
+		Beverage beverage = new Espresso(size);
 		beverage.setName(name);
 		beverage.setCost(cost);
 		beverage.setDescription(description);
