@@ -34,6 +34,8 @@ import javax.swing.JTextArea;
 
 import exercise.TabPanel;
 import exercise.factory.BeverageFactory;
+import exercise.factory.FoodFactory;
+import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasSize;
 
@@ -49,6 +51,8 @@ public class NewProductionWindow extends JDialog {
 	private TabPanel mainPanel;
 	
 	ArrayList<String> beverageNames = new ArrayList<String>();
+	
+	ArrayList<String> foodNames = new ArrayList<String>();
 	
 	/**
 	 * Launch the application.
@@ -136,36 +140,57 @@ public class NewProductionWindow extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					ArrayList<String> names = null;
 					String newItem = nameTextBox.getText();
+					String path = null;
+					if (newItem.trim().equals("")){
+						ErrorDialog.showErrorMessage(null, "请输入文件名", "错误");
+						return ;
+					}
 					if (beverageJRadio.isSelected()){
-						if (beverageNames.contains(newItem)){
+						names = beverageNames;
+						path = ResourceFilePath.BeverageList;
+						if (names.contains(newItem)){
 							ErrorDialog.showErrorMessage(null, "已经存在该饮料!", "错误");
 							return ;
 						}
-						if (newItem.trim().equals("")){
-							ErrorDialog.showErrorMessage(null, "请输入文件名", "错误");
-							return ;
-						}
-						try {
-							double cost = Double.parseDouble(prizeTextBox.getText());
-							String description = textArea.getText();
-							BeverageFactory.createNewBeverage(newItem, cost, description,HasSize.SMALL);
-							beverageNames.add(newItem); //维护商品列表
-							ResourceFilePath.updateItemList(beverageNames, ResourceFilePath.BeverageList);
-							JOptionPane.showMessageDialog(NewProductionWindow.this, "成功加入商品");
-							if (mainPanel != null)
-								mainPanel.updateProductionList();
-						} catch (NumberFormatException e2) {
-							ErrorDialog.showErrorMessage(null, "请输入正确的数字", "错误");
+					}else if (foodJRadio.isSelected()){
+						names = foodNames;
+						path = ResourceFilePath.FoodList;
+						if (names.contains(newItem)){
+							ErrorDialog.showErrorMessage(null, "已经存在该食物!", "错误");
 							return ;
 						}
 					}
+					
+			
+					try {
+							Production production = null;
+							double cost = Double.parseDouble(prizeTextBox.getText());
+							String description = textArea.getText();
+							if (beverageJRadio.isSelected())
+								BeverageFactory.createNewBeverage(newItem, cost, description,HasSize.SMALL);
+							else
+								FoodFactory.createNewFood(newItem, cost, description, HasSize.SMALL);
+							
+							names.add(newItem); //维护商品列表
+							ResourceFilePath.updateItemList(names, path);
+							JOptionPane.showMessageDialog(NewProductionWindow.this, "成功加入商品");
+							if (mainPanel != null)
+								mainPanel.updateProductionList();
+					} catch (NumberFormatException e2) {
+							ErrorDialog.showErrorMessage(null, "请输入正确的数字", "错误");
+							return ;
+					}
+					
 				}
 			});
 			
 			setTitle("添加新商品");
 			
 			beverageNames = ResourceFilePath.readAllItem(ResourceFilePath.BeverageList); //读饮料
+			
+			foodNames = ResourceFilePath.readAllItem(ResourceFilePath.FoodList); //食物的清单
 			
 			setLocationRelativeTo(null); //居中显示
 		}

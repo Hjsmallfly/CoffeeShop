@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 
 
+
 import java.awt.Color;
 
 import javax.swing.AbstractButton;
@@ -14,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
-
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -32,8 +32,8 @@ import exercise.customizegui.ProductList;
 import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
 import exercise.product.BillList;
+import exercise.product.Food;
 import exercise.product.Ice;
-
 import exercise.product.Milk;
 import exercise.product.Production;
 import exercise.product.Sugar;
@@ -60,6 +60,10 @@ import javax.swing.JCheckBox;
  *
  */
 public class TabPanel extends JPanel implements ListSelectionListener,MouseListener,KeyListener,ItemListener {
+	
+	public static final int  BEVERAGE_TYPE = 0;
+	public static final int  FOOD_TYPE = 1;
+	
 	private JTextField costTextBox; //右边的价格box
 	private JTextField countTextBox;	//右边的数量box
 	private JTextField psTextBox;	//右边的备注box
@@ -83,6 +87,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	JRadioButton bigJRadio = new JRadioButton("大");
 	JRadioButton middleJRadio = new JRadioButton("中");
 	
+	private int  type = BEVERAGE_TYPE;
 	
 //	private CheckboxGroup ingredientChkbox = new CheckboxGroup(); //用来存放 调料的checkbox 复选 
 	//Creating a set of buttons with the same ButtonGroup object means that turning "on" one of those buttons turns off all other buttons in the group.
@@ -113,11 +118,18 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	public void setCategory(Production p){
 		if (p instanceof Beverage){ //如果是饮料类的话
 			productListBox.setList(ResourceFilePath.readAllBeverage());
+			type = BEVERAGE_TYPE;
+		}else if (p instanceof Food){
+			productListBox.setList(ResourceFilePath.readAllFood());
+			type = FOOD_TYPE;
 		}
 	}
 	
 	public void updateProductionList(){
-		productListBox.setList(ResourceFilePath.readAllBeverage());
+		if (type == BEVERAGE_TYPE)
+			productListBox.setList(ResourceFilePath.readAllBeverage());
+		else if(type == FOOD_TYPE)
+			productListBox.setList(ResourceFilePath.readAllFood());
 	}
 	
 	/**
@@ -559,25 +571,30 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	 * 订购商品
 	 */
 	public void order(){
-		Beverage beverage = (Beverage) productListBox.getSelectedValue() ;
-//		JOptionPane.showMessageDialog(productListBox, beverage.getSpecific() + "\n" + beverage.getCost() + "\n" + beverage.figureCost());
+		
+		Production production = productListBox.getSelectedValue() ;
+//		JOptionPane.showMessageDialog(productListBox, production.getSpecific() + "\n" + production.getCost() + "\n" + production.figureCost());
 		//size和价格在都在选的时候就计算好了 所以这里要传进去的是 小杯的money
-		int size = beverage.getSize();
-		beverage.setSize(HasSize.SMALL);
-		double cost = beverage.getCost(); //这样得到是小杯的价格
-		beverage.setSize(size); //重新设置回去
-		beverage = BeverageFactory.order(beverage.getName(),cost, beverage.description(),size);
-		
+		if (production instanceof HasSize){
+			int size = ((HasSize) production).getSize();
+			((HasSize) production).setSize(HasSize.SMALL);
+			double cost = production.getCost(); //这样得到是小杯的价格
+			((HasSize) production).setSize(size); //重新设置回去
+			production = BeverageFactory.order(production.getName(),cost, production.description(),size);
+		}else {
+			//没有大小的产品的生成代码
+		}
 		//添加调料
-		addIngredients(beverage);
+		if (production instanceof HasIngredient)
+			addIngredients((HasIngredient) production);
 		
-		billList.add(beverage);
+		billList.add(production);
 //		if (billList.size() == 1)
 //			billListBox.updateCellSize(); //不然加第一个元素的时候 尺寸 会不对...
 		
 		updateTotalCost(); //修改显示得总价格
 		
-		int index =	billListBox.indexOf(beverage); //此商品添加到的位置
+		int index =	billListBox.indexOf(production); //此商品添加到的位置
 											 //注意这里判断存不存在该元素 用的是 equals 方法
 											 //但是如果用默认的equals方法 会比较所有字段,所以这里如果count字段不同的话 将会是不同的
 											 //暂时修改了父类的equals 方法 解决该矛盾

@@ -7,6 +7,7 @@ import exercise.customizegui.BillDialog;
 import exercise.customizegui.ErrorDialog;
 import exercise.product.BillList;
 import exercise.product.Espresso;
+import exercise.product.Pizza;
 import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 
@@ -137,7 +138,7 @@ public class MainFrame extends JFrame implements ChangeListener {
 		
 		
 		MainTabbedPane.addTab("食物", null, foodTab, null);
-		foodTab.setCategory(new Espresso(0));
+		foodTab.setCategory(new Pizza());
 
 //		billList.addOrderListBox(foodTab.getOrderListBox(),beverageTab.getOrderListBox()); //有点像观察者模式
 		

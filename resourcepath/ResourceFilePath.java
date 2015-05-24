@@ -11,7 +11,9 @@ import javax.swing.JOptionPane;
 
 import exercise.customizegui.ErrorDialog;
 import exercise.factory.BeverageFactory;
+import exercise.factory.FoodFactory;
 import exercise.product.Beverage;
+import exercise.product.Food;
 import exercise.product.Production;
 import exercise.usefulinterface.HasSize;
 
@@ -21,6 +23,7 @@ public class ResourceFilePath {
 	public static final String resourceDirectory = "/data/pic"; //图片等资源放在data/pic文件夹里面
 	public static final String productDirectory = "/data/product"; //产品的文件夹
 	public static final String beverageDirectory = productDirectory + "/beverage"; //饮料类的文件夹
+	public static final String foodDirectory = productDirectory + "/food"; //食物类的文件夹
 	public static final String ingredientDirectory = productDirectory + "/ingredient"; //调料类
 	public static final String recordDirectory = productDirectory + "/record"; //存放记录的文件夹
 	public static final String saleRecordDirectory = recordDirectory + "/salerecord"; //商品的交易量
@@ -37,7 +40,7 @@ public class ResourceFilePath {
 	
 	public static final String BeverageList = "all_beverage.txt";
 	public static final String BillList = "billlist.txt"; //存放所有交易记录
-	
+	public static final String FoodList = "all_food.txt";
 	
 	
 	/**
@@ -80,9 +83,10 @@ public class ResourceFilePath {
 		String path = null;
 		if (p == null)
 			return false;
-		else if (p instanceof Beverage)
+		if (p instanceof Beverage)
 			path = beverageDirectory;
-		
+		else if (p instanceof Food)
+			path = foodDirectory;
 		RandomAccessFile f = openFile(path + "/" +  p.getName(),"rw");
 		
 		if (f == null){
@@ -105,6 +109,53 @@ public class ResourceFilePath {
 			}
 		}
 		return true;
+	}
+	
+	
+	public static Production readProductionInfo(String path){
+		RandomAccessFile file = openFile( path, "r");
+		if (file == null){
+//			ErrorDialog.showErrorMessage(null, "找不到:" + path, "找不到文件");
+			return null;
+		}
+		double cost = 0.0;
+		String name = null;
+		String description = null;
+		try{	
+			cost = Double.parseDouble(file.readUTF());
+			name = file.readUTF();
+			description = file.readUTF();
+			Production production = BeverageFactory.order(name, cost, description, HasSize.SMALL);
+			file.close();
+			return production;
+		}catch(IOException e){
+			ErrorDialog.showErrorMessage(null, ResourceFilePath.beverageDirectory + "/"  + name + " 文件损坏", "文件损坏");
+			return null;
+		}
+		
+		
+	}
+	
+	public static ArrayList<Food> readAllFood(){
+		ArrayList<String> name = readAllItem(FoodList);
+		if ( name.size() == 0 ){
+			ErrorDialog.showErrorMessage(null, "新建立的列表文件", "");
+			return null;
+		}
+		StringBuilder sb = new StringBuilder("找不到下列文件:\n");
+		ArrayList<Food> allFood = new ArrayList<Food>();
+		
+		for(String path : name){
+			Production production = readProductionInfo(  foodDirectory + "/" + path);
+			if (production != null){
+				allFood.add(FoodFactory.order(production.getName(), production.getCost(), production.description(), HasSize.SMALL));
+			}else{
+				sb.append(foodDirectory + "/" + path + "\n");
+			}
+		}
+		if (!sb.toString().equals("找不到下列文件:\n"))
+			ErrorDialog.showErrorMessage(null, sb.toString(), "找不到下列文件");
+		return allFood;
 	}
 	
 	
@@ -174,11 +225,18 @@ public class ResourceFilePath {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		writeAllBeverage();
-		BeverageFactory.createNewBeverage("Coffee", 1.0, "Test Coffee",HasSize.SMALL); //注意与存的时候保持一致
+//		writeAllBeverage();
+//		BeverageFactory.createNewBeverage("Coffee", 1.0, "Test Coffee",HasSize.SMALL); //注意与存的时候保持一致
+//		for(int i = 0 ; i < 100 ; ++i){
+//			Production p = BeverageFactory.createNewBeverage("Coffee" + i, 1.0, "Test Coffee",HasSize.SMALL);
+//		}
+		ArrayList<String> names = new ArrayList<String>();
 		for(int i = 0 ; i < 100 ; ++i){
-			Production p = BeverageFactory.createNewBeverage("Coffee" + i, 1.0, "Test Coffee",HasSize.SMALL);
+			names.add("Pizza" + i);
+			FoodFactory.createNewFood("Pizza" + i, 5.0,"just pizza", HasSize.SMALL);
 		}
+		updateItemList(names, FoodList);
+		readAllFood();
 	}
 	
 	/**
@@ -192,6 +250,9 @@ public class ResourceFilePath {
 			path = productDirectory + "/"  + BeverageList;
 		else if(path.equals(BillList))
 			path = recordDirectory + "/" + BillList;
+		else if (path.equals(FoodList))
+			path = productDirectory + "/" + FoodList;
+		
 		RandomAccessFile file = openFile(path, "rw");
 
 		ArrayList<String> names = new ArrayList<String>();
@@ -212,8 +273,10 @@ public class ResourceFilePath {
 			return;
 		if (path.equals(BeverageList))
 			path = productDirectory + "/"  + BeverageList;
-		if (path.equals(BillList))
+		else if (path.equals(BillList))
 			path = recordDirectory + "/" + BillList;
+		else if (path.equals(FoodList))
+			path = productDirectory + "/" + FoodList;
 		RandomAccessFile file = openFile(path,"rw");
 		try{
 			for(String s : names){
