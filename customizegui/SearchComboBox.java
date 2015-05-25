@@ -1,5 +1,4 @@
 package exercise.customizegui;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +13,12 @@ import exercise.product.Espresso;
 import exercise.product.Pizza;
 import exercise.product.Production;
 
+
+/**
+ * 支持搜索功能的ComboBox
+ * @author STU_nwad
+ *
+ */
 @SuppressWarnings("serial")
 public class SearchComboBox extends JComboBox<Production> { //有搜索功能的的ComboBox
 //	private DefaultComboBoxModel<Production> productionListModel = new DefaultComboBoxModel<Production>(); //管理显示出来的列表 

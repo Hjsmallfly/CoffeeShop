@@ -256,15 +256,15 @@ public class BillList {
 	}
 	
 	public static void main(String[] args) {
-		BillList list = new BillList();
-		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
-		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
-		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
-		list.add(BeverageFactory.createBeverage("SmallFlyCoffee10", 0).addIngredient(new Ice()));
-//		System.out.println(list.getAllToString());
-//		System.out.println(list.getProductions().toString());
-		list.saveToFile();
-		list.readFromFile("order-2015.05.23-13.01.01");
+//		BillList list = new BillList();
+//		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
+//		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
+//		list.add(BeverageFactory.createBeverage("Espresso", 0).addIngredient(new Sugar()));
+//		list.add(BeverageFactory.createBeverage("SmallFlyCoffee10", 0).addIngredient(new Ice()));
+////		System.out.println(list.getAllToString());
+////		System.out.println(list.getProductions().toString());
+//		list.saveToFile();
+//		list.readFromFile("order-2015.05.23-13.01.01");
 	}
 	
 }

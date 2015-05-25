@@ -1,6 +1,7 @@
 package exercise.customizegui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -73,5 +74,15 @@ public class ProductList extends JList<Production> {
 		}
 	}
 	
+	/**
+	 * 按照销量排序
+	 */
+	public void sort(){
+		Production production = getSelectedValue(); //记录之前所中的位置
+		productionArray.sort(null); //因为Production 已经实现了那个接口
+		setList(productionArray);
+		setSelectedAt(production);//还原之前的位置
+		updateState();
+	}
 	
 }

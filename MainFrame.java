@@ -11,14 +11,10 @@ import exercise.product.Pizza;
 import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.JLabel;
@@ -31,11 +27,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import javax.swing.JComboBox;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
@@ -50,7 +42,7 @@ public class MainFrame extends JFrame implements ChangeListener {
 	TabPanel foodTab = new TabPanel(billList);
 	JLabel itemPicture = new JLabel("商品图片:");
 	JButton showBills = new JButton("全部订单");
-	
+	JButton sortButton = new JButton("按销量排序");
 
 	
 	/**
@@ -102,7 +94,7 @@ public class MainFrame extends JFrame implements ChangeListener {
 		super("Coffee Shop");
 		setResizable(false); //不可调整大小
 		//setAlwaysOnTop(true);
-		
+		Production.readSaleInfoFromFile(); //获得销售数据
 		addListeners();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -122,15 +114,13 @@ public class MainFrame extends JFrame implements ChangeListener {
 			JOptionPane.showMessageDialog(null, ResourceFilePath.resourceDirectory + "/logo.jpg");
 		}
 		
-		
 		MainTabbedPane.setForeground(Color.LIGHT_GRAY);
 		MainTabbedPane.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		MainTabbedPane.setBounds(10, 296, 716, 373);
 		MainTabbedPane.addChangeListener(this);
 		contentPane.add(MainTabbedPane);
 		
-		String[] strs = new String[]{"Mocha","Expreeso","Caffee"};
-		
+
 		
 		MainTabbedPane.addTab("饮料", null, beverageTab, null);
 		beverageTab.setLayout(null);
@@ -140,9 +130,7 @@ public class MainFrame extends JFrame implements ChangeListener {
 		MainTabbedPane.addTab("食物", null, foodTab, null);
 		foodTab.setCategory(new Pizza());
 
-//		billList.addOrderListBox(foodTab.getOrderListBox(),beverageTab.getOrderListBox()); //有点像观察者模式
-		
-		//加入了构造函数里面
+
 //		foodTab.setBillList(billList); //同一份账单
 //		beverageTab.setBillList(billList);
 		
@@ -161,15 +149,30 @@ public class MainFrame extends JFrame implements ChangeListener {
 		showBills.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<String> names = ResourceFilePath.readAllItem(ResourceFilePath.BillList);
-				if (names.size() == 0)
+				if (names.size() == 0){
 					ErrorDialog.showErrorMessage(null, "还没有账单记录", "空的账单记录");
-				else
+				}
+				else{
 					BillDialog.showWindow();
+					ErrorDialog.showErrorMessage(null, Production.getAllSaleInfo(), "全部商品的销量统计");
+				}
 			}
 		});
 		
 		
 		showBills.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		sortButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		sortButton.setBounds(10, 672, 93, 23);
+		sortButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				foodTab.sortTheProductionList();
+				beverageTab.sortTheProductionList();
+				
+			}
+		});
+		contentPane.add(sortButton);
 	}
 
 	@Override

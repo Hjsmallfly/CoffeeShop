@@ -41,21 +41,9 @@ public class ResourceFilePath {
 	public static final String BeverageList = "all_beverage.txt";
 	public static final String BillList = "billlist.txt"; //存放所有交易记录
 	public static final String FoodList = "all_food.txt";
+	public static final String SaleList = "all_sale.txt"; //存放各种商品的全部交易记录
 	
 	
-	/**
-	 * 记得关闭返回的文件
-	 * @return 可读写的文件或者null
-	 */
-//	public static RandomAccessFile readBeverage(){
-//		try {
-//			RandomAccessFile beverageFile = new RandomAccessFile(beverageDirectory + "/" + BeverageList, "rw");//可读可写
-//			return beverageFile;
-//		} catch (FileNotFoundException e) {
-//			//JOptionPane.showMessageDialog(null, "找不到" + beverageDirectory  + "/" + BeverageList);
-//			return null;
-//		} 
-//	}
 	
 	/**
 	 * 如果是rw模式的话 文件不存在的话 便会创建。若是r模式文件不存在的话返回null
@@ -211,18 +199,18 @@ public class ResourceFilePath {
 	/**
 	 * 修改饮料的清单文件
 	 */
-	public static void writeAllBeverage(){
-		String name = "Coffee";
-		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList,"rw");
-		try {
-			file.writeUTF(name);
-			for(int i = 0 ; i < 100 ; ++i)
-				file.writeUTF(name + i);
-			file.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void writeAllBeverage(){
+//		String name = "Coffee";
+//		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList,"rw");
+//		try {
+//			file.writeUTF(name);
+//			for(int i = 0 ; i < 100 ; ++i)
+//				file.writeUTF(name + i);
+//			file.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public static void main(String[] args) throws IOException {
 //		writeAllBeverage();

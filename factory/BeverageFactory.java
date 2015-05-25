@@ -1,14 +1,7 @@
 package exercise.factory;
-
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.lang.reflect.Field;
-
-import exercise.customizegui.ErrorDialog;
 import exercise.product.Beverage;
 import exercise.product.Espresso;
-import exercise.product.SmallFlyCoffee;
-import exercise.resourcepath.ResourceFilePath;
+
 
 /**
  * 用于产生饮料
@@ -16,42 +9,6 @@ import exercise.resourcepath.ResourceFilePath;
  *
  */
 public class BeverageFactory {
-	/**
-	 * 生产相应的饮料(要求饮料已经存在于产品清单中)
-	 * @param name 饮料的名字
-	 * @return
-	 */
-	public static Beverage createBeverage(String name,int size){
-		Beverage beverage = null;
-		RandomAccessFile file = ResourceFilePath.openFile(ResourceFilePath.beverageDirectory + "/"  + name,"rw");
-		if (file != null){
-			try {
-				beverage = new Beverage() {
-					{ //代码块 用于初始化咯
-						cost = Double.parseDouble(file.readUTF());
-						setName(file.readUTF());
-						description = file.readUTF();
-					}
-				};
-			} catch (IOException e) {
-				ErrorDialog.showErrorMessage(null, ResourceFilePath.beverageDirectory + "/"  + name + " 文件损坏", "文件损坏");
-				beverage = null;
-			}finally{
-				try {
-					file.close();
-				} catch (IOException e) {
-					// TODO 自动生成的 catch 块
-					e.printStackTrace();
-				}
-			}
-		}
-		if (beverage != null){
-			beverage.addSaleCount(beverage.getName());
-		}
-		
-		return beverage;
-	}
-
 	/**
 	 * 生成新的饮料 会存入文件中
 	 * @param name 新饮料的名字

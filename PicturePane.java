@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class PicturePane extends JPanel {
 	private ArrayList<Image>  srcPICs = new ArrayList<Image>()  ; //保存原图片的List
 	private Image fitPic; //压缩之后的图片
@@ -42,7 +43,7 @@ public class PicturePane extends JPanel {
 		PicturePane.this.repaint();//调用重绘方法
 	}
 	
-	@Override //进行绘图
+	@Override //进行绘图 覆盖该方法会使用 双缓冲 技术
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		if (fitPic != null){

@@ -9,6 +9,11 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import java.awt.Font;
 
+/**
+ * 用于显示错误消息
+ * @author STU_nwad
+ *
+ */
 public class ErrorDialog extends JDialog {
 	private String errorMSG;
 	

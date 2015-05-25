@@ -54,19 +54,6 @@ public class NewProductionWindow extends JDialog {
 	
 	ArrayList<String> foodNames = new ArrayList<String>();
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			NewProductionWindow dialog = new NewProductionWindow();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public static void showWindow(TabPanel t){
 		try {
 			

@@ -1,7 +1,12 @@
 package exercise.product;
 
+import java.io.IOError;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import exercise.customizegui.ErrorDialog;
 import exercise.resourcepath.ResourceFilePath;
@@ -12,7 +17,7 @@ import exercise.usefulinterface.Countable;
  * @author STU_nwad
  *
  */
-public abstract class Production implements Countable {
+public abstract class Production implements Countable,Comparable<Production>,Comparator<Production> {
 	protected String name; //名称
 	protected String description; //描述
 	protected double cost; //价格
@@ -29,6 +34,63 @@ public abstract class Production implements Countable {
 	/*抽象方法*/
 	
 	/**
+	 * 将所有销量记录到文件中
+	 * 格式是 键值 对
+	 */
+	
+	public static void readSaleInfoFromFile(){
+		String path = ResourceFilePath.saleRecordDirectory + "/" + ResourceFilePath.SaleList;
+		RandomAccessFile saleRecord = ResourceFilePath.openFile(path, "rw");
+		if (saleRecord == null){
+			ErrorDialog.showErrorMessage(null, "无法打开文件 " + path, "in Production");
+			return ;
+		}
+		String name = null;
+		Integer i = 0;
+		try {
+			for(;saleRecord.getFilePointer() != saleRecord.length();){
+				name = saleRecord.readUTF();
+				i = saleRecord.readInt();
+				counter.put(name, i); //增加这个数据咯
+			}
+		} catch (IOException e) {
+			ErrorDialog.showErrorMessage(null, path + " 文件损坏", "in Production");
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	public static void saveSaleInfoToFile(){
+		if (counter.size() == 0)
+			return;
+		String path = ResourceFilePath.saleRecordDirectory + "/" + ResourceFilePath.SaleList;
+		RandomAccessFile saleRecord = ResourceFilePath.openFile(path, "rw");
+		if (saleRecord == null){
+			ErrorDialog.showErrorMessage(null, "无法打开文件 " + path, "in Production");
+			return ;
+		}
+		
+		Set<String> keySet = counter.keySet();
+		for(String key : keySet){ //迭代
+			try{
+				saleRecord.writeUTF(key);
+				saleRecord.writeInt(counter.get(key));
+			}catch(IOException e){
+				e.printStackTrace();
+				ErrorDialog.showErrorMessage(null, "储存销售记录时出错", key);
+				break;
+			}
+		}
+		try {
+			saleRecord.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	/**
 	 * 返回商品的具体信息，如 咖啡(大杯) ice milk 价格
 	 * @return
 	 */
@@ -37,15 +99,6 @@ public abstract class Production implements Countable {
 	public boolean saveTofile(){ //保存信息到文件里面
 		return ResourceFilePath.saveToFile(this);
 	}
-//	public abstract boolean readFromfile(); //从文件中读取信息
-	
-	/**
-	 * 这是没有size的order方法
-	 * @return 返回实例化的对象
-	 */
-//	public abstract Production order();
-	
-	
 	/*抽象方法*/
 	
 /*有关counter的方法*/
@@ -54,7 +107,7 @@ public abstract class Production implements Countable {
 	 * @param name 商品的名称
 	 * @param i    销售量
 	 */
-	public void addSaleCount(String name,int i){
+	public static void addSaleCount(String name,int i){
 		if(counter.containsKey(name)){
 			counter.put(name, counter.get(name) + i); //更新数据
 		}else {
@@ -66,11 +119,38 @@ public abstract class Production implements Countable {
 	 * 销量+1
 	 * @param name 商品的名称
 	 */
-	public void addSaleCount(String name){
+	public static void addSaleCount(String name){
 		addSaleCount(name,1);
 	}
 	
-	public int getSaleCount(String name){
+	public void addSaleCount(int i){
+		addSaleCount(name, i);
+	}
+	
+	public void addSaleCount(){
+		addSaleCount(name);
+	}
+	
+	/**
+	 * 设置名为name的商品的销量
+	 * @param name
+	 * @param i
+	 */
+	public void setSaleCount(String name,int i){
+		if (i < 0)
+			i = 0;
+		if (counter.containsKey(name)){
+			counter.put(name, i); //相当于覆盖之前的信息
+		}
+	}
+	
+	public static int getSaleCount(String name){
+		if (counter.containsKey(name))
+			return counter.get(name);
+		return 0;
+	}
+	
+	public int getSaleCount(){
 		if (counter.containsKey(name))
 			return counter.get(name);
 		return 0;
@@ -79,7 +159,7 @@ public abstract class Production implements Countable {
 	 * 返回所有销售数据
 	 * @return
 	 */
-	public String getAllSaleInfo(){
+	public static String getAllSaleInfo(){
 		return counter.toString();
 	}
 	
@@ -188,4 +268,31 @@ public abstract class Production implements Countable {
 		}
 		return false;
 	}
+	
+	@Override
+	public int compareTo(Production item){
+		if ( getSaleCount() < item.getSaleCount() )
+			return -1;
+		else if (getSaleCount() > item.getSaleCount())
+			return 1;
+		else
+			return 0;
+	}
+	
+	@Override
+	public int compare(Production o1, Production o2) {
+		if (o1.getSaleCount() > o2.getSaleCount())
+			return 1;
+		else if (o1.getSaleCount() < o2.getSaleCount())
+			return -1;
+		else 
+			return 0;
+	}
+	
+	
+	
+	
+	
+	
+	
 }

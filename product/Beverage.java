@@ -39,11 +39,11 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	
 
 	
-	//订饮料
-	public static Beverage order(String type,int size){
-		return 
-				BeverageFactory.createBeverage(type,size);
-	}
+//	//订饮料
+//	public static Beverage order(String type,int size){
+//		return 
+//				BeverageFactory.createBeverage(type,size);
+//	}
 	
 	/*get方法*/
 	

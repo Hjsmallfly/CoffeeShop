@@ -1,15 +1,9 @@
 package exercise;
 import javax.swing.JPanel;
-import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
-
-
-
-
 import java.awt.Color;
-
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -18,13 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Enumeration;
-
 import javax.swing.JRadioButton;
-
 import exercise.customizegui.BillCellRenderer;
 import exercise.customizegui.OrderListBox;
 import exercise.customizegui.ErrorDialog;
@@ -42,7 +33,6 @@ import exercise.product.Sugar;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasIngredient;
 import exercise.usefulinterface.HasSize;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -53,7 +43,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.swing.JCheckBox;
 
 /**
@@ -61,6 +50,7 @@ import javax.swing.JCheckBox;
  * @author STU_nwad
  *
  */
+@SuppressWarnings("serial")
 public class TabPanel extends JPanel implements ListSelectionListener,MouseListener,KeyListener,ItemListener {
 	
 	public static final int  BEVERAGE_TYPE = 0;
@@ -72,7 +62,6 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	private JTextField countTextBox;	//右边的数量box
 	private JTextField psTextBox;	//右边的备注box
 	ProductList productListBox = new ProductList();
-	private static String[] strs = new String[]{"Mocha","Expresso","Coffee","Others..."};
 	private JTextField totalCostTextBox;	//右边的总价box
 		
 	OrderListBox billListBox = new OrderListBox();
@@ -103,6 +92,10 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	JLabel totalCostLabel = new JLabel("$0.0");
 	
 	
+	public void sortTheProductionList(){
+		productListBox.sort();
+	}
+	
 	public void setBillList(BillList bill){
 		this.billList = bill;
 	}
@@ -119,6 +112,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		return null;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" }) //Java泛型的问题
 	public void setCategory(Production p){
 		ArrayList list = new ArrayList();
 		if (p instanceof Beverage){ //如果是饮料类的话
@@ -169,6 +163,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	/**
 	 * Create the panel.
 	 */
+	@SuppressWarnings("unchecked") // 因为Java 泛型的问题
 	public TabPanel(BillList billList) {
 		this.billList = billList;
 		setBackground(Color.WHITE);
@@ -260,11 +255,6 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		editButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		editButton.setBounds(10, 231, 129, 23);
 		infoPanel.add(editButton);
-		
-//		JComboBox comboBox = new JComboBox(new Object[]{});
-//		comboBox.setEditable(true);
-//		comboBox.setBounds(-250, 0, 224, 21);
-//		infoPanel.add(comboBox);
 		
 		JLabel costLabel = new JLabel("单价:");
 		costLabel.setBounds(10, 24, 54, 15);
@@ -392,17 +382,17 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 				
 			}
 		});
+		
 		billPanel.add(incomeTextBox);
 		
 				
 				
 				
-				JButton submitOrder = new JButton("确认订单");
-				submitOrder.setBounds(10, 264, 316, 23);
-				billPanel.add(submitOrder);
-				submitOrder.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-				submitOrder.addActionListener(new ActionListener() {
-					
+		JButton submitOrder = new JButton("确认订单");
+		submitOrder.setBounds(10, 264, 316, 23);
+		billPanel.add(submitOrder);
+		submitOrder.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		submitOrder.addActionListener(new ActionListener() {			
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						if (billList.size() == 0){
@@ -412,6 +402,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 						
 						if ( billList.saveToFile() ){
 							JOptionPane.showMessageDialog(TabPanel.this, "已经成功保存订单信息");
+							Production.saveSaleInfoToFile(); //记录销量
 							clearState();
 						}else {
 							ErrorDialog.showErrorMessage(null, "保存账单信息失败","");
@@ -613,6 +604,8 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		updateTotalCost(); //修改显示得总价格
 		
+		production.addSaleCount(); //统计总的销售数量
+		
 		int index =	billListBox.indexOf(production); //此商品添加到的位置
 											 //注意这里判断存不存在该元素 用的是 equals 方法
 											 //但是如果用默认的equals方法 会比较所有字段,所以这里如果count字段不同的话 将会是不同的
@@ -642,8 +635,10 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			if (billListBox.getSelectedIndex() == -1)
 				return ;
 			int index = billListBox.getSelectedIndex();
-			billList.remove(billListBox.getSelectedValue());
-//			billListBox.remove(billListBox.getSelectedValue());
+			Production production = billListBox.getSelectedValue();
+			production.setSaleCount(production.getName(), production.getSaleCount() - 1 );
+			billList.remove(production);
+			
 			if (index > 0){
 				billListBox.ensureIndexIsVisible(index - 1);
 				billListBox.setSelectedIndex(index - 1);
@@ -691,7 +686,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	/**
 	 * 修改订单中具体商品的数量
 	 */
-	public void modifyCost(){
+	public void modifyCount(){
 		try{
 			if (billListBox.getSelectedIndex() == -1)
 				return;
@@ -731,7 +726,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	public void keyPressed(KeyEvent e) {
 		if (e.getSource() == countTextBox && e.getKeyCode() == KeyEvent.VK_ENTER){
 			//修改数量
-			modifyCost();
+			modifyCount();
 
 		}else if (e.getSource() == incomeTextBox && e.getKeyCode() == KeyEvent.VK_ENTER){
 			//计算要找出的钱
