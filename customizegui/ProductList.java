@@ -49,6 +49,20 @@ public class ProductList extends JList<Production> {
 	}
 	
 	/**
+	 * 让Listbox选中参数所在的位置,如果列表中不存在该参数
+	 * 则不会改变之前的选择状态
+	 * @param p
+	 */
+	public void setSelectedAt(Production p){
+		int index = getSelectedIndex();
+		int newIndex = productionListModel.indexOf(p);
+		if (newIndex != -1){
+			setSelectedIndex(newIndex);
+			ensureIndexIsVisible(newIndex);
+		}
+	}
+	
+	/**
 	 * 更新列表的显示
 	 */
 	public void updateState(){

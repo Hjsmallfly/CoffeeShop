@@ -7,6 +7,7 @@ import javax.swing.border.TitledBorder;
 
 
 
+
 import java.awt.Color;
 
 import javax.swing.AbstractButton;
@@ -29,6 +30,7 @@ import exercise.customizegui.OrderListBox;
 import exercise.customizegui.ErrorDialog;
 import exercise.customizegui.NewProductionWindow;
 import exercise.customizegui.ProductList;
+import exercise.customizegui.SearchComboBox;
 import exercise.factory.BeverageFactory;
 import exercise.product.Beverage;
 import exercise.product.BillList;
@@ -63,6 +65,8 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	
 	public static final int  BEVERAGE_TYPE = 0;
 	public static final int  FOOD_TYPE = 1;
+	
+	private SearchComboBox searchBox;
 	
 	private JTextField costTextBox; //右边的价格box
 	private JTextField countTextBox;	//右边的数量box
@@ -116,13 +120,18 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	}
 	
 	public void setCategory(Production p){
+		ArrayList list = new ArrayList();
 		if (p instanceof Beverage){ //如果是饮料类的话
+			list = ResourceFilePath.readAllBeverage();
 			productListBox.setList(ResourceFilePath.readAllBeverage());
 			type = BEVERAGE_TYPE;
+
 		}else if (p instanceof Food){
-			productListBox.setList(ResourceFilePath.readAllFood());
+			list = ResourceFilePath.readAllFood();
+			productListBox.setList(list);
 			type = FOOD_TYPE;
 		}
+		searchBox.setList(list);
 	}
 	
 	public void updateProductionList(){
@@ -144,8 +153,11 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 				
 			}
 		};
+		smallJRadio.setBackground(Color.WHITE);
 		smallJRadio.addActionListener(updateState);
+		middleJRadio.setBackground(Color.WHITE);
 		middleJRadio.addActionListener(updateState);
+		bigJRadio.setBackground(Color.WHITE);
 		bigJRadio.addActionListener(updateState);
 		
 		chckbxIce.addActionListener(updateState);
@@ -163,20 +175,24 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		setForeground(Color.LIGHT_GRAY);
 		setLayout(null);
 		addListenersOfButtons();
-		JComboBox searchBox = new JComboBox(strs);
+		searchBox = new SearchComboBox(billList.getProductions());
+		searchBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		searchBox.setEditable(true);
 		searchBox.setBounds(10, 10, 673, 21);
+		searchBox.addKeyListenerForTextbox(this);
 		add(searchBox);
 		
 
 		
 		JPanel infoPanel = new JPanel();
+		infoPanel.setBackground(Color.WHITE);
 		infoPanel.setBorder(new TitledBorder(null, "商品信息", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		infoPanel.setBounds(206, 41, 149, 291);
 		add(infoPanel);
 		infoPanel.setLayout(null);
 		
 		costTextBox = new JTextField("$100");
+		costTextBox.setBackground(Color.WHITE);
 		costTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		costTextBox.setEditable(false);
 		costTextBox.setText("0");
@@ -211,6 +227,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		
 		JButton editButton = new JButton("编辑");
+		editButton.setBackground(Color.WHITE);
 		//为按钮添加 动作 监听器
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -264,6 +281,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		newProductButton.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		
 		JPanel billPanel = new JPanel();
+		billPanel.setBackground(Color.WHITE);
 		billPanel.setBorder(new TitledBorder(null, "订单", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		billPanel.setBounds(348, 41, 335, 291);
 		add(billPanel);
@@ -341,6 +359,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		billPanel.add(lblPrize);
 		
 		totalCostTextBox = new JTextField();
+		totalCostTextBox.setBackground(Color.WHITE);
 		totalCostTextBox.setEditable(false);
 		totalCostTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 		totalCostTextBox.setColumns(10);
@@ -725,13 +744,30 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		}else if (e.getSource() == productListBox && e.getKeyCode() == KeyEvent.VK_ENTER ){
 			if (productListBox.getSelectedIndex() != -1)
 				order(); //用回车键也可以订货
+		}else if(e.getSource() == searchBox.getTextbox()){
+			int key = e.getKeyCode();
+			
+			if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN || key == KeyEvent.VK_ENTER)
+				searchBox.setSystemOperation(true); //说明是系统自定义的操作
+			else
+				searchBox.setSystemOperation(false);
+			
+			if (key == KeyEvent.VK_ALT || key == KeyEvent.VK_ENTER){ //这里用ALT键是因为 TAB ENTER 这些和系统有冲突
+				Production p = searchBox.select();
+				if (p != null)
+					productListBox.setSelectedAt(p);//选中这个
+			}
 		}
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO 自动生成的方法存根
+		if (e.getSource() == searchBox.getTextbox()){
+			if (searchBox.isSystemOperation() == true)
+				return;
+			searchBox.search();
+		}
 		
 	}
 
