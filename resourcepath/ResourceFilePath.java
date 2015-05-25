@@ -127,7 +127,7 @@ public class ResourceFilePath {
 	public static ArrayList<Food> readAllFood(){
 		ArrayList<String> name = readAllItem(FoodList);
 		if ( name.size() == 0 ){
-			ErrorDialog.showErrorMessage(null, "新建立的列表文件", "");
+//			ErrorDialog.showErrorMessage(null, "新建立的列表文件", "");
 			return null;
 		}
 		StringBuilder sb = new StringBuilder("找不到下列文件:\n");

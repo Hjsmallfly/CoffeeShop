@@ -272,19 +272,19 @@ public abstract class Production implements Countable,Comparable<Production>,Com
 	@Override
 	public int compareTo(Production item){
 		if ( getSaleCount() < item.getSaleCount() )
-			return -1;
-		else if (getSaleCount() > item.getSaleCount())
 			return 1;
+		else if (getSaleCount() > item.getSaleCount())
+			return -1;
 		else
 			return 0;
 	}
 	
-	@Override
+	@Override //注意 升序 还是 降序 哦 哈哈
 	public int compare(Production o1, Production o2) {
 		if (o1.getSaleCount() > o2.getSaleCount())
-			return 1;
-		else if (o1.getSaleCount() < o2.getSaleCount())
 			return -1;
+		else if (o1.getSaleCount() < o2.getSaleCount())
+			return 1;
 		else 
 			return 0;
 	}

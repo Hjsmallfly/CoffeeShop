@@ -749,8 +749,10 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			
 			if (key == KeyEvent.VK_ALT || key == KeyEvent.VK_ENTER){ //这里用ALT键是因为 TAB ENTER 这些和系统有冲突
 				Production p = searchBox.select();
-				if (p != null)
+				if (p != null){
+					productListBox.requestFocus();//切换这个焦点
 					productListBox.setSelectedAt(p);//选中这个
+				}
 			}
 		}
 		

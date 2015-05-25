@@ -87,6 +87,7 @@ public class SearchComboBox extends JComboBox<Production> { //有搜索功能的
 	 */
 	public void search(){
 		String name = getTextbox().getText();
+		
 		if (name.trim().equals("")) //不处理空的情况
 			return;
 		SearchComboBox.this.hidePopup();
@@ -94,8 +95,9 @@ public class SearchComboBox extends JComboBox<Production> { //有搜索功能的
 			return;
 		SearchComboBox.this.removeAllItems();
 		
+		String lowCase = name.toLowerCase(); //小写
 		for(Production p : productionList){
-			if (p.toString().contains(name)){
+			if (p.toString().toLowerCase().contains(lowCase)){ //不区分大小写
 				SearchComboBox.this.addItem(p);
 			}
 		}

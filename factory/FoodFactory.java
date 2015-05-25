@@ -1,10 +1,7 @@
 package exercise.factory;
-
-import exercise.product.Beverage;
-import exercise.product.Espresso;
 import exercise.product.Food;
 import exercise.product.Pizza;
-import exercise.product.Production;
+
 
 public class FoodFactory {
 	/**

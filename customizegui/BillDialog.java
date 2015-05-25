@@ -93,6 +93,7 @@ public class BillDialog extends JDialog {
 			infomationTextBox.setFont(new Font("微软雅黑", Font.PLAIN, 13));
 			
 			
+			
 		}
 	}
 }

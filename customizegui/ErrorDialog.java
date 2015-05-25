@@ -10,7 +10,7 @@ import javax.swing.SwingUtilities;
 import java.awt.Font;
 
 /**
- * 用于显示错误消息
+ * 用于显示错误消息(用作消息窗口也行)
  * @author STU_nwad
  *
  */
@@ -27,6 +27,7 @@ public class ErrorDialog extends JDialog {
 		setAlwaysOnTop(true);
 		setSize(460,240);
 		errorDisplay.setFont(new Font("微软雅黑", Font.PLAIN, 13));
+		errorDisplay.setLineWrap(true);
 		errorDisplay.setText(msg);
 		getContentPane().add(new JScrollPane(errorDisplay));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

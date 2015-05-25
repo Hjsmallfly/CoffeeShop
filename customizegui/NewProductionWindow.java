@@ -152,7 +152,7 @@ public class NewProductionWindow extends JDialog {
 					
 			
 					try {
-							Production production = null;
+							
 							double cost = Double.parseDouble(prizeTextBox.getText());
 							String description = textArea.getText();
 							if (beverageJRadio.isSelected())

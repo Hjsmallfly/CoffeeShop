@@ -154,6 +154,7 @@ public class MainFrame extends JFrame implements ChangeListener {
 				}
 				else{
 					BillDialog.showWindow();
+					//这里用作普通的提示窗口
 					ErrorDialog.showErrorMessage(null, Production.getAllSaleInfo(), "全部商品的销量统计");
 				}
 			}
