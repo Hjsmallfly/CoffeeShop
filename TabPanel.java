@@ -402,7 +402,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 						
 						if ( billList.saveToFile() ){
 							JOptionPane.showMessageDialog(TabPanel.this, "已经成功保存订单信息");
-							Production.saveSaleInfoToFile(); //记录销量
+//							Production.saveSaleInfoToFile(); //记录销量
 							clearState();
 						}else {
 							ErrorDialog.showErrorMessage(null, "保存账单信息失败","");

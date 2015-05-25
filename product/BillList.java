@@ -78,8 +78,10 @@ public class BillList {
 	 * @param count
 	 */
 	public void setCount(Production p ,int count){
-		if (billList.containsKey(p.getSpecific())){
+		if (billList.containsKey(p.getSpecific())){{
 			billList.get(p.getSpecific()).setCount(count);
+			p.setSaleCount(p.getName(),count); //全部销量那里也要统计
+		}
 		}
 	}
 	
@@ -190,6 +192,7 @@ public class BillList {
 			record.writeDouble(getBillCost()); //记录这笔账单的总价格 这个记在前面是因为这个数据常常需要用到
 			for(Production production : getProductions()){
 //				record.writeUTF(production.getName());
+				production.addSaleCount((int) production.getCount()); //修改整体销量
 				record.writeUTF(production.getSpecific());
 				record.writeInt((int) production.getCount());
 				record.writeDouble(production.figureCost());
