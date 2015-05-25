@@ -141,8 +141,9 @@ public class ResourceFilePath {
 				sb.append(foodDirectory + "/" + path + "\n");
 			}
 		}
-		if (!sb.toString().equals("找不到下列文件:\n"))
-			ErrorDialog.showErrorMessage(null, sb.toString(), "找不到下列文件");
+		//调试使用
+//		if (!sb.toString().equals("找不到下列文件:\n"))
+//			ErrorDialog.showErrorMessage(null, sb.toString(), "找不到下列文件");
 		return allFood;
 	}
 	
@@ -185,8 +186,9 @@ public class ResourceFilePath {
 				if (info != null)
 					info.close();
 			}
-			if (missFiles)
-				ErrorDialog.showErrorMessage(null, "找不到下列文件:\n" +  errMsg.toString(),"找不到文件");
+			//调试时使用
+//			if (missFiles)
+//				ErrorDialog.showErrorMessage(null, "找不到下列文件:\n" +  errMsg.toString(),"找不到文件");
 			file.close();
 			return all;
 		} catch (IOException e) {
