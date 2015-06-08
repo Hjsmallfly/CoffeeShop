@@ -10,8 +10,8 @@ public class Pizza extends Food {
 	public static void main(String[] args) {
 		Pizza pizza =  new Pizza();
 		pizza.saveTofile();
-		pizza.addSaleCount(pizza.getName());
-		pizza.addSaleCount(pizza.getName());
-		System.out.println( pizza.getAllSaleInfo() );
+		Production.addSaleCount(pizza.getName());
+		Production.addSaleCount(pizza.getName());
+		System.out.println( Production.getAllSaleInfo() );
 	}
 }

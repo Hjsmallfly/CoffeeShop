@@ -3,7 +3,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
+
 import java.awt.Color;
+
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -12,10 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Enumeration;
+
 import javax.swing.JRadioButton;
+
 import exercise.customizegui.BillCellRenderer;
 import exercise.customizegui.OrderListBox;
 import exercise.customizegui.ErrorDialog;
@@ -33,6 +38,7 @@ import exercise.product.Sugar;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasIngredient;
 import exercise.usefulinterface.HasSize;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -43,6 +49,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JCheckBox;
 
 /**
@@ -57,7 +64,6 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	public static final int  FOOD_TYPE = 1;
 	
 	private SearchComboBox searchBox;
-	
 	private JTextField costTextBox; //右边的价格box
 	private JTextField countTextBox;	//右边的数量box
 	private JTextField psTextBox;	//右边的备注box
@@ -87,7 +93,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	JTextArea descriptionTextArea = new JTextArea();
 	private JTextField incomeTextBox;
 	
-	private BillList billList; //用于管理
+	private BillList billList; //用于管理订单
 	
 	JLabel totalCostLabel = new JLabel("$0.0");
 	
@@ -100,9 +106,9 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		this.billList = bill;
 	}
 	
-	public OrderListBox getOrderListBox(){
-		return billListBox;
-	}
+//	public OrderListBox getOrderListBox(){
+//		return billListBox;
+//	}
 	
 	
 	public ArrayList<Production> getProductions(){
@@ -128,11 +134,20 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		searchBox.setList(list);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void updateProductionList(){
-		if (type == BEVERAGE_TYPE)
-			productListBox.setList(ResourceFilePath.readAllBeverage());
-		else if(type == FOOD_TYPE)
-			productListBox.setList(ResourceFilePath.readAllFood());
+		
+		ArrayList p = null;
+		
+		if (type == BEVERAGE_TYPE){
+			p = ResourceFilePath.readAllBeverage();
+		}
+		else if(type == FOOD_TYPE){
+			p = ResourceFilePath.readAllFood();
+		}
+		productListBox.setList(p);
+		searchBox.setList(p); //更新
+		
 	}
 	
 	/**
@@ -143,7 +158,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				productListBox.updateState(); //更新list的显示状态
+				productListBox.updateState(); //更新list的显示状态 同时也会触发 列表 选中的事件 所以连同 价格这些也会重新更新
 				
 			}
 		};
@@ -161,9 +176,9 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	}
 	
 	/**
-	 * Create the panel.
+	 * 用外部的billList初始化这个面板
+	 * @param billList
 	 */
-	@SuppressWarnings("unchecked") // 因为Java 泛型的问题
 	public TabPanel(BillList billList) {
 		this.billList = billList;
 		setBackground(Color.WHITE);
@@ -177,7 +192,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		searchBox.addKeyListenerForTextbox(this);
 		add(searchBox);
 		
-
+		
 		
 		JPanel infoPanel = new JPanel();
 		infoPanel.setBackground(Color.WHITE);
@@ -282,6 +297,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		billPanel.add(scrollPane);
 		billListBox.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 //		billListBox.setBillList(billList);
+		billListBox.relyTo(billList); //依赖于外部传进来的账单
 		billListBox.addListSelectionListener(this);
 		billListBox.addMouseListener(this);
 		billListBox.setCellRenderer(new BillCellRenderer());
@@ -475,7 +491,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	}
 	
 	/**
-	 * 用于控制JList的事件
+	 * 当选中List的项时，发生的动作
 	 */
 	@Override
 	public void valueChanged(ListSelectionEvent e) { //修改相应的数据显示
@@ -572,6 +588,9 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 			p.addIngredient(new Sugar());
 	}
 	
+	/**
+	 * 更新总价格的显示
+	 */
 	public void updateTotalCost(){
 		double sum = billList.getBillCost();
 		totalCostLabel.setText("$" + sum);
@@ -615,7 +634,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 		
 		//这样可以触发 ListSelection事件~借此更新画面
 		
-		billListBox.clearSelection();
+		billListBox.clearSelection(); //这句话不能少，否则不会更新状态
 		
 		billListBox.setSelectedIndex(index);
 		
@@ -702,7 +721,7 @@ public class TabPanel extends JPanel implements ListSelectionListener,MouseListe
 	}
 	
 	/**
-	 * 计算要找出的钱
+	 * 计算要找出的钱,同时设置相应的显示
 	 */
 	public void figureOut(){
 		try{

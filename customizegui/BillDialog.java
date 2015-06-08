@@ -8,19 +8,19 @@ import java.awt.BorderLayout;
 
 
 
+
+
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JList;
-import javax.swing.JLabel;
 
 import java.awt.Font;
 
-import javax.swing.JTextField;
 
 import exercise.product.BillList;
+import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -28,6 +28,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JTextArea;
 
+@SuppressWarnings("serial")
 public class BillDialog extends JDialog {
 	
 	private ArrayList<String> filename = ResourceFilePath.readAllItem(ResourceFilePath.BillList);
@@ -70,7 +71,7 @@ public class BillDialog extends JDialog {
 			scrollPane.setBounds(10, 10, 196, 242);
 			panel.add(scrollPane);
 			
-			JList billList = new JList(filename.toArray());
+			JList billList = new JList( filename.toArray());
 			billList.setFont(new Font("微软雅黑", Font.PLAIN, 12));
 			billList.addListSelectionListener(new ListSelectionListener() {
 				

@@ -1,16 +1,8 @@
 package exercise.product;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
-
-import javax.swing.JOptionPane;
-
 import exercise.factory.BeverageFactory;
-import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasIngredient;
 import exercise.usefulinterface.HasSize;
 
@@ -26,7 +18,7 @@ public abstract class Beverage extends Production implements HasSize , HasIngred
 	protected ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>(); //保存是否加了调料 
 	
 	protected int size;//饮料的 大 中 小 杯
-		
+	
 	/*构造函数*/
 	public Beverage() {
 		

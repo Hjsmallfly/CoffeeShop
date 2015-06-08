@@ -1,6 +1,5 @@
 package exercise.product;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Comparator;
@@ -29,7 +28,7 @@ public abstract class Production implements Countable,Comparable<Production>,Com
 	
 	private static Map<String, Integer> counter = new HashMap<String, Integer>(); //用于记录销量 一开始的Integer会是zero
 	
-	protected int saleCount = 0;
+	protected int saleCount = 0; //某一具体商品的saleCount
 	
 	/*抽象方法*/
 	
@@ -255,7 +254,8 @@ public abstract class Production implements Countable,Comparable<Production>,Com
 	/* set方法集 */
 	
 	/**
-	 * 这里覆盖了equals方法
+	 * 当商品的 Specific 信息相同时 才认为两者相等。
+	 * 包括价格，是否有配料，等等
 	 */
 	@Override
 	public boolean equals(Object obj){
@@ -288,11 +288,4 @@ public abstract class Production implements Countable,Comparable<Production>,Com
 		else 
 			return 0;
 	}
-	
-	
-	
-	
-	
-	
-	
 }

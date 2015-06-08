@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+
 import java.awt.Font;
 
 /**
@@ -14,8 +15,9 @@ import java.awt.Font;
  * @author STU_nwad
  *
  */
+@SuppressWarnings("serial")
 public class ErrorDialog extends JDialog {
-	private String errorMSG;
+	private String errorMSG = null;
 	
 	private static ArrayList<String> errors = new ArrayList<String>(); //用来保存已经出现过的errormsg
 	

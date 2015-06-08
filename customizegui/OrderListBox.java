@@ -1,7 +1,4 @@
 package exercise.customizegui;
-
-import java.util.ArrayList;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListModel;
@@ -14,10 +11,10 @@ import exercise.product.Production;
  * @author STU_nwad
  *
  */
+@SuppressWarnings("serial")
 public class OrderListBox extends JList<Production> {
-	private BillList orderList = new BillList(); //用于维护数据
 	
-	private DefaultListModel billListModel = new DefaultListModel<Production>(); //泛型擦除的原因 
+	private DefaultListModel<Production> billListModel = null; //这个由外部传入 这个用于管理数据
 	
 	/**
 	 * 依赖于管理数据的list
@@ -30,7 +27,7 @@ public class OrderListBox extends JList<Production> {
 	
 	public void setNewListModel(ListModel<Production> productionListModel){
 		setModel(productionListModel); //立马就会显示
-		billListModel = (DefaultListModel) productionListModel;
+		billListModel = (DefaultListModel<Production>) productionListModel;
 	}
 	
 	
@@ -47,38 +44,9 @@ public class OrderListBox extends JList<Production> {
 	public OrderListBox(){
 		
 	}
-	
-
-	
-	public void addElement(Production p){
-		orderList.add(p);
-	}
-	
+		
 	/**
-	 * 加入多个数据
-	 * @param productions
-	 */
-	public void addElement(ArrayList<Production> productions){
-		if (productions == null)
-			return ;
-		for(Production p : productions){
-			orderList.add(p);
-		}
-	}
-	
-
-	
-	/**
-	 * 相当于重置账单状态
-	 */
-	public void removeAll(){
-		orderList.removeAll();
-		billListModel.clear();
-	}
-	
-	
-	/**
-	 * 这里会更新数据的显示
+	 * 更新列表中数据的显示
 	 * 
 	 */
 	public void update(){
@@ -87,20 +55,15 @@ public class OrderListBox extends JList<Production> {
 		 setSelectedIndex(index);
 	}
 	
-	public void remove(Production p){
-		orderList.remove(p);
-		billListModel.removeElement(p);
-	}
 	
 	/**
 	 * 设置合适的cellRenderer的size
 	 */
 	public void updateCellSize(){
+//		If height is -1, cell heights are computed in the ListUI by applying getPreferredSize to the cell renderer component for each list element. 
+
 		setFixedCellHeight(-1);
 		setFixedCellWidth(-1);
 	}
 	
-	public BillList getBillList(){
-		return orderList;
-	}
 }

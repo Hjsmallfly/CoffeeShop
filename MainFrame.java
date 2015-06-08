@@ -65,25 +65,7 @@ public class MainFrame extends JFrame implements ChangeListener {
 		ShowFrame.run(f,f.getWidth(),f.getHeight());
 	}
 	
-	/**
-	 * 为组件添加各种事件
-	 */
-	public void addListeners(){
-		MainTabbedPane.addChangeListener(new ChangeListener() { //这里用匿名内部类，是因为要用到MainFrame中的其他参数
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JTabbedPane t = (JTabbedPane) e.getSource();
-				int index = t.getSelectedIndex();
-				if (index != -1){
-					//do something
-				}
-			}
-		});
-		
-		
-	}
-
+	
 	/**
 	 * Create the frame.
 	 * @throws IOException 
@@ -95,8 +77,6 @@ public class MainFrame extends JFrame implements ChangeListener {
 		setResizable(false); //不可调整大小
 		//setAlwaysOnTop(true);
 		Production.readSaleInfoFromFile(); //获得销售数据
-		addListeners();
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 779,781);
 		contentPane = new JPanel();
@@ -134,9 +114,10 @@ public class MainFrame extends JFrame implements ChangeListener {
 //		foodTab.setBillList(billList); //同一份账单
 //		beverageTab.setBillList(billList);
 		
-		foodTab.getOrderListBox().relyTo(billList); //这样感觉更灵活些
-		beverageTab.getOrderListBox().relyTo(billList);
-//		billList.addListDataListener(foodTab,beverageTab); //监听List内容的变化
+		//监听List内容的变化
+//		foodTab.getOrderListBox().relyTo(billList); //这样感觉更灵活些
+//		beverageTab.getOrderListBox().relyTo(billList);
+//		billList.addListDataListener(foodTab,beverageTab); 
 		
 		
 		

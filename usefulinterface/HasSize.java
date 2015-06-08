@@ -1,7 +1,5 @@
 package exercise.usefulinterface;
 
-import exercise.product.Production;
-
 /**
  * 如果商品实现了这个接口，则说明该商品是有大小这个属性的。
  * @author STU_nwad

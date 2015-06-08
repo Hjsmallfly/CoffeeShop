@@ -4,11 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
-import java.text.BreakIterator;
 import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
 import exercise.customizegui.ErrorDialog;
 import exercise.factory.BeverageFactory;
 import exercise.factory.FoodFactory;
@@ -81,7 +77,7 @@ public class ResourceFilePath {
 			return false;
 		}
 		try {
-			//注意java writeUTF 真特么坑爹。。。。。是改过的UTF格式 - - 蛋疼
+			//注意 Java 的 writeUFT 是 java 特有的UTF编码
 			f.writeUTF(p.getCost() + ""); //cost
 			f.writeUTF(p.getName());	//name
 			f.writeUTF(p.description());	//description
@@ -198,21 +194,6 @@ public class ResourceFilePath {
 		return all;
 	}
 	
-	/**
-	 * 修改饮料的清单文件
-	 */
-//	public static void writeAllBeverage(){
-//		String name = "Coffee";
-//		RandomAccessFile file = openFile(productDirectory + "/" + BeverageList,"rw");
-//		try {
-//			file.writeUTF(name);
-//			for(int i = 0 ; i < 100 ; ++i)
-//				file.writeUTF(name + i);
-//			file.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	public static void main(String[] args) throws IOException {
 //		writeAllBeverage();

@@ -63,6 +63,7 @@ public class SearchComboBox extends JComboBox<Production> { //有搜索功能的
 		if (list.size() == 0)
 			return;
 //		JOptionPane.showMessageDialog(editor,"It's alright");
+		productionList.clear(); //先清空
 		productionList.addAll(list);
 	}
 	
@@ -72,10 +73,10 @@ public class SearchComboBox extends JComboBox<Production> { //有搜索功能的
 	 * @return 返回该元素 如果没有选中项则返回null
 	 */
 	public Production select(){
-		int index = SearchComboBox.this.getSelectedIndex();
+		int index = getSelectedIndex();
 		if (index != -1){
-			editor.setText(SearchComboBox.this.getSelectedItem().toString());
-			SearchComboBox.this.hidePopup();
+			editor.setText(getSelectedItem().toString());
+			hidePopup();
 			return getItemAt(index);
 		}
 		return null;
@@ -83,36 +84,41 @@ public class SearchComboBox extends JComboBox<Production> { //有搜索功能的
 	}
 	
 	/**
-	 * 开始搜索,并会有相应的显示
+	 * 根据所关联的 文本框 的内容进行搜索
 	 */
 	public void search(){
 		String name = getTextbox().getText();
 		
 		if (name.trim().equals("")) //不处理空的情况
 			return;
-		SearchComboBox.this.hidePopup();
+		hidePopup();
 		if (productionList.size() == 0 )
 			return;
-		SearchComboBox.this.removeAllItems();
+		//先清空所有数据，等下再把符合条件的数据添加到 下拉框 中
+		removeAllItems();
 		
 		String lowCase = name.toLowerCase(); //小写
 		for(Production p : productionList){
 			if (p.toString().toLowerCase().contains(lowCase)){ //不区分大小写
-				SearchComboBox.this.addItem(p);
+				addItem(p);
 			}
 		}
-		if (SearchComboBox.this.getItemCount() != 0)
-			SearchComboBox.this.showPopup();
+		if (getItemCount() != 0)
+			showPopup();
 		else {
-			SearchComboBox.this.hidePopup();
+			hidePopup();
 		}
 		getTextbox().setText(name);
 			
 	}
 	
+	/**
+	 * 添加这个搜索框的时候要添加一个商品列表
+	 * @param list
+	 */
+	
 	public SearchComboBox(ArrayList<Production> list) {
 		setList(list);
-//		setModel(productionListModel);//加入这个模型
 		setEditable(true); //可以编辑
 		editor = (JTextField) getEditor().getEditorComponent();
 		editor.addMouseListener(new MouseAdapter() {
@@ -123,46 +129,9 @@ public class SearchComboBox extends JComboBox<Production> { //有搜索功能的
 					editor.setText(""); //清空
 			}
 		});
-//		editor.addKeyListener(new ListenTyping());
 	}
 	
-/*
-	class ListenTyping implements KeyListener{
 
-		@Override
-		public void keyTyped(KeyEvent e) {
-			
-		}
-
-		@Override
-		public void keyPressed(KeyEvent e) {
-			int key = e.getKeyCode();
-			
-			if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN || key == KeyEvent.VK_ENTER)
-				setSystemOperation(true); //说明是系统自定义的操作
-			else
-				setSystemOperation(false);
-			
-			if (key == KeyEvent.VK_ALT || key == KeyEvent.VK_ENTER){ //这里用ALT键是因为 TAB ENTER 这些和系统有冲突
-				select();
-			}
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			if (isSystemOperation() == true)
-				return;
-			search();
-		}
-		
-	}
-	
-	@Override
-		public void showPopup() {
-			if (SYSTEM_OPERATION != true)
-				super.showPopup();
-		}
-*/	
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
 		ArrayList<Production> list = new ArrayList<Production>();
@@ -176,4 +145,42 @@ public class SearchComboBox extends JComboBox<Production> { //有搜索功能的
 	}
 	
 }
+
+/*
+class ListenTyping implements KeyListener{
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+		
+		if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN || key == KeyEvent.VK_ENTER)
+			setSystemOperation(true); //说明是系统自定义的操作
+		else
+			setSystemOperation(false);
+		
+		if (key == KeyEvent.VK_ALT || key == KeyEvent.VK_ENTER){ //这里用ALT键是因为 TAB ENTER 这些和系统有冲突
+			select();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (isSystemOperation() == true)
+			return;
+		search();
+	}
+	
+}
+
+@Override
+	public void showPopup() {
+		if (SYSTEM_OPERATION != true)
+			super.showPopup();
+	}
+*/	
 

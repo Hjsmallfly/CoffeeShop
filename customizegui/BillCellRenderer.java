@@ -3,18 +3,10 @@ package exercise.customizegui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-
-
-
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-
 import exercise.product.Production;
 
 /**
@@ -22,15 +14,16 @@ import exercise.product.Production;
  * @author STU_nwad
  *
  */
-public class BillCellRenderer extends JTextArea implements ListCellRenderer {
+@SuppressWarnings("serial")
+public class BillCellRenderer extends JTextArea implements ListCellRenderer<Production> {
 
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value,
-			int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<? extends Production> list, Production value, int index,
+			boolean isSelected, boolean cellHasFocus) {
 		setFont( new Font("微软雅黑", Font.PLAIN, 12) );
 		setRows(2);
 		setColumns(14);
-		setPreferredSize(getPreferredSize());
+		setPreferredSize(getPreferredSize());//把控件大小设置为合适的大小
 		setLineWrap(true); //自动换行
 		setWrapStyleWord(true);
 		TitledBorder titlebBorder = new TitledBorder("");
@@ -51,4 +44,5 @@ public class BillCellRenderer extends JTextArea implements ListCellRenderer {
 	        };
 		return this;
 	}
+
 }

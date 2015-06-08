@@ -10,12 +10,11 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.DefaultListModel;
-import javax.swing.event.ListDataListener;
+//import javax.swing.event.ListDataListener;
 
 import exercise.TimeData;
 import exercise.customizegui.ErrorDialog;
 import exercise.customizegui.OrderListBox;
-import exercise.factory.BeverageFactory;
 import exercise.resourcepath.ResourceFilePath;
 
 /**
@@ -30,18 +29,18 @@ public class BillList {
 	private ArrayList<OrderListBox> orderboxes = new ArrayList<OrderListBox>(); //用于管理加入到这里的 列表框
 	
 	
-	private DefaultListModel<Production> productionListModel = new DefaultListModel<Production>(); //BillList 维护这个 
+	private DefaultListModel<Production> productionListModel = new DefaultListModel<Production>(); //BillList类 维护一个列表模型 
 	
-	/**
-	 * 为listdatamodel提供一个接口
-	 * @param listeners
-	 */
-	public void addListDataListener(ListDataListener... listeners){
-		if (listeners.length != 0){
-			for(ListDataListener listener : listeners)
-				productionListModel.addListDataListener(listener);
-		}
-	}
+//	/**
+//	 * 
+//	 * @param listeners 需要监听 列表里面内容变化的对象
+//	 */
+//	public void addListDataListener(ListDataListener... listeners){
+//		if (listeners.length != 0){
+//			for(ListDataListener listener : listeners)
+//				productionListModel.addListDataListener(listener);
+//		}
+//	}
 	
 	
 	public void addOrderListBox(OrderListBox ... boxes){
@@ -57,7 +56,7 @@ public class BillList {
 		if (boxes.length != 0){
 			for(int i = 0 ; i < boxes.length ; ++i){
 				orderboxes.remove(boxes[i]);
-				boxes[i].setNewListModel(new DefaultListModel()); //不再跟随这个数据模型了
+				boxes[i].setNewListModel(new DefaultListModel<Production>()); //不再跟随这个数据模型了
 			}
 		}
 	}
@@ -65,7 +64,7 @@ public class BillList {
 	public void removeAllOrderListBox(){
 		if (orderboxes.size() != 0){
 			for(OrderListBox listBox : orderboxes)
-				listBox.setNewListModel(new DefaultListModel());
+				listBox.setNewListModel(new DefaultListModel<Production>());
 		}
 		orderboxes.clear();
 	}
@@ -95,11 +94,12 @@ public class BillList {
 		String feature = p.getSpecific();
 		if (billList.containsKey(feature)){ //如果已经存在这个商品的话
 			billList.get(feature).addCount(); //递增1 
-												//这里增加了1同时model那里的数据也会得到更新 
-			if (orderboxes.size() != 0){
-				for(OrderListBox listBox : orderboxes)
-					listBox.update();
-			}
+												//这里增加了1同时model那里的数据也会得到更新 但是不会立即显示出来。
+//			if (orderboxes.size() != 0){
+//				for(OrderListBox listBox : orderboxes)
+//					//listBox.update();
+//					;
+//			}
 			
 		}else {
 				p.setCount(1);
@@ -123,6 +123,10 @@ public class BillList {
 				add(p);
 	}
 	
+	/**
+	 * 除去订单中的某个商品
+	 * @param p
+	 */
 	public void remove(Production p){
 		billList.remove(p.getSpecific(), p); //注意 removeValue 和这个方法有区别
 		productionListModel.removeElement(p);

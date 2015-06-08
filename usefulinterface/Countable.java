@@ -1,5 +1,10 @@
 package exercise.usefulinterface;
 
+/**
+ * 可以计数的 接口
+ * @author STU_nwad
+ *
+ */
 public interface Countable {
 	/**
 	 * 获得计数

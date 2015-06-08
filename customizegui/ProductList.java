@@ -1,14 +1,9 @@
 package exercise.customizegui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import exercise.product.Production;
 
@@ -17,14 +12,18 @@ import exercise.product.Production;
  * @author STU_nwad
  *
  */
+@SuppressWarnings("serial")
 public class ProductList extends JList<Production> {
+	@SuppressWarnings("rawtypes")
 	private DefaultListModel productionListModel = new DefaultListModel(); //列表模型
 	
+	@SuppressWarnings("rawtypes")
 	private ArrayList productionArray;
 	/**
 	 * 
 	 * @param p 商品的列表
 	 */
+	@SuppressWarnings("rawtypes")
 	public ProductList(ArrayList p) {
 		setList(p);
 	}
@@ -33,6 +32,7 @@ public class ProductList extends JList<Production> {
 	 * 
 	 * @param p 商品的列表
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setList(ArrayList p){
 		if (p == null)
 			return;
@@ -55,7 +55,6 @@ public class ProductList extends JList<Production> {
 	 * @param p
 	 */
 	public void setSelectedAt(Production p){
-		int index = getSelectedIndex();
 		int newIndex = productionListModel.indexOf(p);
 		if (newIndex != -1){
 			setSelectedIndex(newIndex);
@@ -77,6 +76,7 @@ public class ProductList extends JList<Production> {
 	/**
 	 * 按照销量排序
 	 */
+	@SuppressWarnings("unchecked")
 	public void sort(){
 		Production production = getSelectedValue(); //记录之前所中的位置
 		productionArray.sort(null); //因为Production 已经实现了那个接口

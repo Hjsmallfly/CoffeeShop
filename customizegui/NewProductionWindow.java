@@ -1,44 +1,26 @@
 package exercise.customizegui;
-
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-
-import java.awt.GridLayout;
-
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JRadioButton;
 import javax.swing.JLabel;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
-
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
 import exercise.TabPanel;
 import exercise.factory.BeverageFactory;
 import exercise.factory.FoodFactory;
-import exercise.product.Production;
 import exercise.resourcepath.ResourceFilePath;
 import exercise.usefulinterface.HasSize;
 
+@SuppressWarnings("serial")
 public class NewProductionWindow extends JDialog {
 	private JTextField nameTextBox;
 	private JTextField prizeTextBox;
